@@ -1,0 +1,335 @@
+
+
+<launch>
+	
+<!-- all_setting -->
+<param name="isTimeTop" value="false" />
+<param name="isTimeLeft" value="false" />
+<param name="isTimeRight" value="false" />
+<param name="isTimeCenter" value="false" />
+<param name="isTimeCombine" value="false" />
+
+<!-- top_sync -->
+
+<!-- set -->
+<param name="pitch_calibration" value="true" />
+
+
+<!-- remove -->
+<param name="AREA_THRES" value="0.15" />
+<param name="AREA_GAIN" value="1" />
+<param name="ALPHA_GAIN" value="1" />
+<param name="ALPHA_MAX_" value="20" />
+<param name="H_MIN_" value="0.15" />
+<param name="init_ALPHA_MAX_" value="6" />
+<param name="Long_Distance" value="45" />
+<param name="SetUnderZ" value="1" />
+<param name="SET_GROUND_DEG" value ="10" />
+<param name="isIntensity" value ="false" />
+
+
+<!-- each -->
+<param name="XYTHRESHOLD" value="0.3" />
+<param name="CenterThreshold" value="1.5" />
+<param name="LRThreshold" value="1.0" />
+
+
+<!-- segment -->
+<param name="THRESHOLD" value="0.5" />
+<param name="MIN_OBJECT_NUM" value="1" />
+<param name="AfterSetHeight" value="1" />
+
+
+<!-- LRTcombine -->
+<param name="LR_THRSHOLD" value="0.5" />
+<param name="CENTER_THRSHOLD" value="0.5" />
+<param name="LimitCenter" value="10" />
+<param name="pose_gap" value="0.015" />
+
+
+<!-- pharos_msg -->
+<param name="SET_UNDER_Z" value="1.0" />
+<param name="remove_point_size" value="0" />
+<param name="Set_bong_distance" value="1" />
+<param name="Bigvolum" value="2000" />
+<param name="map_size" value="100" />
+<param name="Set_Perception_Distance" value="12" />
+<param name="XY_AREA" value="0.45" />
+
+
+<!-- set_topic_select -->
+
+<arg name="set_topic" default="set" />
+<arg name="center_topic" default="center" />
+<arg name="sync_topic" default="sync" />
+<arg name="remove_topic" default="object" />
+<arg name="filter_topic" default="filter" />
+<arg name="segmentation_topic" default="seg" />
+<arg name="each_topic" default="each" />
+<arg name="combine_topic" default="combine" />
+<arg name="pharos_topic" default="pharos" />
+
+
+	<!-- set_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_T"     name="vlpt_set_T" respawn="true">
+
+		<param name="T_PLUS_X" value="2.5" />
+		<param name="T_MINUS_X" value="-1.8" />
+
+		<param name="T_PLUS_Y" value="1" />
+		<param name="T_MINUS_Y" value="-1" />	
+
+		<param name="T_PLUS_Z" value="20" />
+		<param name="T_MINUS_Z" value="-20" />	
+		<param name="T_MOVE_Y" value="0.5265" />
+
+		<param name="sub_set" value="vlp_t/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_t" />
+		<param name="frame_set" value="top_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.79" />
+
+
+	</node>
+	
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_L"     name="vlpt_set_L" respawn="true">
+
+		<param name="L_PLUS_X" value="2.5" />
+		<param name="L_MINUS_X" value="-1.8" />
+
+		<param name="L_PLUS_Y" value="0.4" />
+		<param name="L_MINUS_Y" value="-1.5" />	
+
+		<param name="L_PLUS_Z" value="20" />
+		<param name="L_MINUS_Z" value="-20" />	
+		<param name="L_MOVE_Y" value="0.5265" />
+
+		<param name="sub_set" value="vlp_l/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_l" />
+		<param name="frame_set" value="left_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_R"     name="vlpt_set_R" respawn="true">
+
+		<param name="R_PLUS_X" value="2.5" />
+		<param name="R_MINUS_X" value="-1.8" />
+
+		<param name="R_PLUS_Y" value="1.2" />
+		<param name="R_MINUS_Y" value="-0.2" />	
+
+		<param name="R_PLUS_Z" value="20" />
+
+		<param name="R_MINUS_Z" value="-20" />	
+	
+		<param name="R_MOVE_Y" value="-0.5265" />
+
+		<param name="sub_set" value="vlp_r/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_r" />
+		<param name="frame_set" value="right_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+
+	</node>
+
+
+	<!-- center_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_center"     name="vlpt_sync_center" respawn="true">
+
+		<param name="sub_center_left" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="sub_center_right" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="sub_center_top" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="sub_center_vehicle" value="/vehicle/state2016" />
+		<param name="pub_center" value="/vlp_msg/$(arg center_topic)" />
+
+
+	</node>
+
+
+	<!-- sync_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_T"     name="vlpt_sync_T" respawn="true">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_t" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_t" />
+		<param name="frame_sync" value="top_velodyne2" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_L"     name="vlpt_sync_L" respawn="true">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_l" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_l" />
+		<param name="frame_sync" value="left_velodyne2" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_R"     name="vlpt_sync_R" respawn="true">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_r" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_r" />
+		<param name="frame_sync" value="right_velodyne2" />
+
+
+	</node>
+
+
+	<!-- remove_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_T"     name="vlpt_remove_ground_T" respawn="true">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_t" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_t" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_t" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_t" />
+		<param name="frame_remove" value="top_velodyne2" />	
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_L"     name="vlpt_remove_ground_L" respawn="true">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_l" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_l" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_l" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_l" />
+		<param name="frame_remove" value="left_velodyne2" />	
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_R"     name="vlpt_remove_ground_R" respawn="true">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_r" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_r" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_r" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_r" />
+		<param name="frame_remove" value="right_velodyne2" />	
+		
+	</node>
+
+
+	<!-- filter_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_T"     name="vlpt_filter_T" respawn="true">
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+		<param name="sub_filter" value="/vlp_msg/$(arg remove_topic)_t" />
+		<param name="pub_filter" value="/vlp_msg/$(arg filter_topic)_t" />
+		<param name="pub_filter_cloud" value="/vlp_cloud/$(arg filter_topic)_t" />
+		<param name="frame_filter" value="top_velodyne2" />	
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_L"     name="vlpt_filter_L" respawn="true">
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+		<param name="sub_filter" value="/vlp_msg/$(arg remove_topic)_l" />
+		<param name="pub_filter" value="/vlp_msg/$(arg filter_topic)_l" />
+		<param name="pub_filter_cloud" value="/vlp_cloud/$(arg filter_topic)_l" />
+		<param name="frame_filter" value="left_velodyne2" />	
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_R"     name="vlpt_filter_R" respawn="true">
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+		<param name="sub_filter" value="/vlp_msg/$(arg remove_topic)_r" />
+		<param name="pub_filter" value="/vlp_msg/$(arg filter_topic)_r" />
+		<param name="pub_filter_cloud" value="/vlp_cloud/$(arg filter_topic)_r" />
+		<param name="frame_filter" value="right_velodyne2" />	
+	</node>
+
+
+	<!-- segmentation_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_T"     name="vlpt_segmentation_T" respawn="true">
+		<param name="frame_seg" value="top_velodyne2" />
+		<param name="sub_seg" value="/vlp_msg/$(arg filter_topic)_t" />	
+		<param name="pub_seg" value="/vlp_msg/$(arg segmentation_topic)_t" />
+		<param name="pub_seg_cloud" value="/vlp_cloud/$(arg segmentation_topic)_t" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_L"     name="vlpt_segmentation_L" respawn="true">
+		<param name="frame_seg" value="left_velodyne2" />
+		<param name="sub_seg" value="/vlp_msg/$(arg filter_topic)_l" />	
+		<param name="pub_seg" value="/vlp_msg/$(arg segmentation_topic)_l" />
+		<param name="pub_seg_cloud" value="/vlp_cloud/$(arg segmentation_topic)_l" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_R"     name="vlpt_segmentation_R" respawn="true">
+		<param name="frame_seg" value="right_velodyne2" />
+		<param name="sub_seg" value="/vlp_msg/$(arg filter_topic)_r" />	
+		<param name="pub_seg" value="/vlp_msg/$(arg segmentation_topic)_r" />
+		<param name="pub_seg_cloud" value="/vlp_cloud/$(arg segmentation_topic)_r" />
+		
+	</node>
+
+
+	<!-- each_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_each_T"     name="vlpt_each_T" respawn="true">
+		<param name="frame_each" value="top_velodyne2" />
+		<param name="pub_each" value="/vlp_msg/$(arg each_topic)_t" />	
+		<param name="pub_each_cloud" value="/vlp_cloud/$(arg each_topic)_t" />	
+		<param name="sub_each" value="/vlp_msg/$(arg segmentation_topic)_t" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_each_L"     name="vlpt_each_L" respawn="true">
+		<param name="frame_each" value="left_velodyne2" />
+		<param name="pub_each" value="/vlp_msg/$(arg each_topic)_l" />	
+		<param name="pub_each_cloud" value="/vlp_cloud/$(arg each_topic)_l" />	
+		<param name="sub_each" value="/vlp_msg/$(arg segmentation_topic)_l" />
+		
+	</node>
+
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_each_R"     name="vlpt_each_R" respawn="true">
+		<param name="frame_each" value="right_velodyne2" />
+		<param name="pub_each" value="/vlp_msg/$(arg each_topic)_r" />	
+		<param name="pub_each_cloud" value="/vlp_cloud/$(arg each_topic)_r" />	
+		<param name="sub_each" value="/vlp_msg/$(arg segmentation_topic)_r" />
+		
+	</node>
+
+
+	<!-- LRT_combine_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_LRT_Combine"     name="vlpt_LRT_Combine" respawn="true">
+
+		<param name="frame_combine" value="vehicle_frame" />
+		<param name="sub_combine_top" value="/vlp_msg/$(arg each_topic)_t" />
+		<param name="sub_combine_right" value="/vlp_msg/$(arg each_topic)_r" />
+		<param name="sub_combine_left" value="/vlp_msg/$(arg each_topic)_l" />
+		<param name="pub_combine" value="/vlp_msg/$(arg combine_topic)" />
+		<param name="pub_combine_cloud" value="/vlp_cloud/$(arg combine_topic)" />
+		
+
+	</node>
+
+
+	<!-- pharos_msg -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_pharos_msg"     name="vlpt_pharos_msg" respawn="true">
+
+			<param name="frame_pharos" value="odom" />
+			<param name="odom_topic_name" value="/odom/vehicle" />
+			<param name="map_topic_name" value= "drivable_map_perception_map"/>
+			<param name="sub_pharos" value= "/vlp_msg/$(arg combine_topic)"/>
+			<param name="pub_pharos_senosorfusion" value= "/vlp_msg/$(arg pharos_topic)_objectinfo"/>
+			<param name="pub_pharos_pathplanning_cloud" value= "/vlp_cloud/$(arg pharos_topic)_pathplanning"/>
+    </node>
+
+
+</launch>

@@ -1,0 +1,14 @@
+<launch>
+
+	<node name="pharos_map_server" pkg="pharos_map_server" type="pharos_map_server" required="true" output="screen">
+
+		<param name="frame_id" value="/odom" />
+		<param name="roadinfo_map" value="$(find pharos_map_server)/../../pharos_maps/Katech/katech_road.yaml" />
+		<param name="verticalinfo_map" value="$(find pharos_map_server)/../../pharos_maps/Katech/katech_vertical.yaml" />
+		<param name="drivable_map_perception" value="$(find pharos_map_server)/../../pharos_maps/Katech/katech_obstacle.yaml" />
+		<param name="drivable_map_planner" value="$(find pharos_map_server)/../../pharos_maps/Katech/katech_drivable.yaml" />
+		
+
+	</node>
+
+</launch>

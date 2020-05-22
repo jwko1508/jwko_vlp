@@ -1,0 +1,9 @@
+<launch>
+	<node name="gps_conv" pkg="gps_common" type="utm_odometry_node" output="screen">
+		<remap from="odom" to="/gps/ublox_odom"/>
+		<remap from="fix" to="/gps/NavSatFix" />
+		<param name="rot_covariance" value="1e+9" />
+		<param name="frame_id" value="/odom" />
+		<param name="child_frame_id" value="/base_link" />
+	</node>
+</launch>

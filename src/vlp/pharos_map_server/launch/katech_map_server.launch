@@ -1,0 +1,11 @@
+<launch>
+
+	<node name="pharos_map_server" pkg="pharos_map_server" type="pharos_map_server" required="true" output="screen">
+
+		<param name="roadinfo_map" value="$(find pharos_map_server)/../../pharos_maps/KATECH/katech_road_map.yaml" />
+		<param name="verticalinfo_map" value="$(find pharos_map_server)/../../pharos_maps/KATECH/katech_vertical_map.yaml" />
+		<param name="drivable_map_perception" value="$(find pharos_map_server)/../../pharos_maps/KATECH/katech_drivable_map.yaml" />
+		<param name="drivable_map_planner" value="$(find pharos_map_server)/../../pharos_maps/KATECH/katech_drivable_map.yaml" />
+	</node>
+
+</launch>

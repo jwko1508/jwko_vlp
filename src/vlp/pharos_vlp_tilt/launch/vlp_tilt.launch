@@ -1,0 +1,184 @@
+
+
+<launch>
+	
+<!-- all_setting -->
+<param name="isTimeTop" value="false" />
+<param name="isTimeLeft" value="false" />
+<param name="isTimeRight" value="false" />
+<param name="isTimeCenter" value="false" />
+
+<!-- sync -->
+<param name="vehicle_stack" value="200" />
+
+<!-- set -->
+<param name="pitch_calibration" value="true" />
+
+
+<!-- remove -->
+<param name="AREA_THRES" value="0.15" />
+<param name="AREA_GAIN" value="1" />
+<param name="ALPHA_GAIN" value="1" />
+<param name="ALPHA_MAX_" value="20" />
+<param name="H_MIN_" value="0.15" />
+<param name="init_ALPHA_MAX_" value="6" />
+<param name="Long_Distance" value="45" />
+<param name="SetUnderZ" value="1" />
+<param name="SET_GROUND_DEG" value ="10" />
+<param name="isIntensity" value ="false" />
+
+
+<!-- set_topic_select -->
+
+<arg name="set_topic" default="set" />
+<arg name="center_topic" default="center" />
+<arg name="sync_topic" default="sync" />
+<arg name="remove_topic" default="object" />
+
+
+	<!-- set_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_T"     name="vlpt_set_T" respawn="true" output="screen">
+
+		<param name="T_PLUS_X" value="2.5" />
+		<param name="T_MINUS_X" value="-1.8" />
+
+		<param name="T_PLUS_Y" value="1" />
+		<param name="T_MINUS_Y" value="-1" />	
+
+		<param name="T_PLUS_Z" value="20" />
+		<param name="T_MINUS_Z" value="-20" />	
+		<param name="T_MOVE_Y" value="0.5265" />
+
+		<param name="sub_set" value="vlp_t/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_t" />
+		<param name="frame_set" value="top_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.79" />
+
+
+	</node>
+	
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_L"     name="vlpt_set_L" respawn="true" output="screen">
+
+		<param name="L_PLUS_X" value="2.5" />
+		<param name="L_MINUS_X" value="-1.8" />
+
+		<param name="L_PLUS_Y" value="0.4" />
+		<param name="L_MINUS_Y" value="-1.5" />	
+
+		<param name="L_PLUS_Z" value="20" />
+		<param name="L_MINUS_Z" value="-20" />	
+		<param name="L_MOVE_Y" value="0.5265" />
+
+		<param name="sub_set" value="vlp_l/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_l" />
+		<param name="frame_set" value="left_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_R"     name="vlpt_set_R" respawn="true" output="screen">
+
+		<param name="R_PLUS_X" value="2.5" />
+		<param name="R_MINUS_X" value="-1.8" />
+
+		<param name="R_PLUS_Y" value="1.2" />
+		<param name="R_MINUS_Y" value="-0.2" />	
+
+		<param name="R_PLUS_Z" value="20" />
+
+		<param name="R_MINUS_Z" value="-20" />	
+	
+		<param name="R_MOVE_Y" value="-0.5265" />
+
+		<param name="sub_set" value="vlp_r/my_custom_point_info" />
+		<param name="pub_set" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="pub_set_cloud" value="/vlp_cloud/$(arg set_topic)_r" />
+		<param name="frame_set" value="right_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+
+	</node>
+
+
+	<!-- center_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_center"     name="vlpt_sync_center" respawn="true" output="screen">
+
+		<param name="sub_center_left" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="sub_center_right" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="sub_center_top" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="sub_center_vehicle" value="/vehicle/state2016" />
+		<param name="pub_center" value="/vlp_msg/$(arg center_topic)" />
+
+	</node>
+
+
+	<!-- sync_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_T"     name="vlpt_sync_T" respawn="true" output="screen">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_t" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_t" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_t" />
+		<param name="frame_sync" value="top_velodyne2" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_L"     name="vlpt_sync_L" respawn="true" output="screen">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_l" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_l" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_l" />
+		<param name="frame_sync" value="left_velodyne2" />
+
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_sync_R"     name="vlpt_sync_R" respawn="true" output="screen">
+
+		<param name="sub_sync" value="/vlp_msg/$(arg set_topic)_r" />
+		<param name="sub_sync_center" value="/vlp_msg/$(arg center_topic)" />
+		<param name="pub_sync" value="/vlp_msg/$(arg sync_topic)_r" />
+		<param name="pub_sync_cloud" value="/vlp_cloud/$(arg sync_topic)_r" />
+		<param name="frame_sync" value="right_velodyne2" />
+
+
+	</node>
+
+
+	<!-- remove_node -->
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_T"     name="vlpt_remove_ground_T" respawn="true" output="screen">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_t" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_t" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_t" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_t" />
+		<param name="frame_remove" value="top_velodyne2" />	
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_L"     name="vlpt_remove_ground_L" respawn="true" output="screen">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_l" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_l" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_l" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_l" />
+		<param name="frame_remove" value="left_velodyne2" />	
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_R"     name="vlpt_remove_ground_R" respawn="true" output="screen">
+		<param name="sub_remove" value="/vlp_msg/$(arg sync_topic)_r" />
+		<param name="pub_ground_cloud" value="/vlp_cloud/ground_r" />
+		<param name="pub_objects_cloud" value="/vlp_cloud/$(arg remove_topic)_r" />
+		<param name="pub_objects" value="/vlp_msg/$(arg remove_topic)_r" />
+		<param name="frame_remove" value="right_velodyne2" />	
+		
+	</node>
+
+</launch>

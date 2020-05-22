@@ -1,0 +1,11 @@
+std_msgs/Header header
+perfect[] objects
+min_seq[16] min_seq
+max_seq[16] max_seq
+center_position center
+center_position min_center
+center_position max_center
+point min_object
+point max_object
+int32 min_hori
+int32 max_hori

@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/jwkolab/i30_ws_190409/src/pharos_drivers/velodyne-master/velodyne_pointcloud/cmake-build-debug/devel/setup.sh

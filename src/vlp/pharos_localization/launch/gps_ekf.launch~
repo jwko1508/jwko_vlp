@@ -1,0 +1,60 @@
+<launch>
+	<include file="$(find pharos_localization)/launch/utm_odometry.launch" />
+	<arg name="relative_gps" default="true" />
+	<arg name="publish_odom_tf" default="true" />
+
+	<node name="gps_ekf" pkg="pharos_localization" type="gps_ekf_rain.py" output="screen">
+		<param name="gps_odom_topic" value="/gps/ublox_odom" />
+		<param name="vehicle_state_topic" value="/vehicle/state2016" />
+		<param name="publish_rate" value="30" />
+		<param name="frame_id" value="/odom" />
+		<param name="child_frame_id" value="/base_footprint" />
+
+		<param name="ladar_parent_frame_id" value="/base_footprint" />
+		<param name="bumper_ladar_frame_id" value="/laser/bumper" />
+		<param name="RL_ladar_frame_id" value="/laser/roof_left" />
+		<param name="RR_ladar_frame_id" value="/laser/roof_right" />
+		<param name="rear_ladar_frame_id" value="/laser/rear" />
+
+		<!-- bumper_laser displacement from base_link -->
+		<param name="BPL_dx" value="3.50" type="double"/>
+		<param name="BPL_dy" value="0" type="double"/>
+		<param name="BPL_dz" value="0.45" type="double"/>
+		<param name="BPL_R" value="0" type="double"/>
+		<param name="BPL_P" value="-2.0" type="double"/>
+		<param name="BPL_Y" value="0" type="double"/>
+	
+		<!-- roof_laser_left displacement from base_link -->
+		<param name="RFLL_dx" value="1.76" type="double"/>
+		<param name="RFLL_dy" value="0.33" type="double"/>
+		<param name="RFLL_dz" value="1.48" type="double"/>
+		<param name="RFLL_R" value="0" type="double"/>
+		<param name="RFLL_P" value="-2.0" type="double"/>
+		<param name="RFLL_Y" value="0" type="double"/>
+	
+		<!-- roof_laser_right displacement from base_link -->
+		<param name="RFLR_dx" value="1.76" type="double"/>
+		<param name="RFLR_dy" value="-0.33" type="double"/>
+		<param name="RFLR_dz" value="1.48" type="double"/>
+		<param name="RFLR_R" value="0" type="double"/>
+		<param name="RFLR_P" value="2.0" type="double"/>
+		<param name="RFLR_Y" value="0" type="double"/>
+
+		<!-- rear_laser displacement from base_link -->
+		<param name="RL_dx" value="-1.0" type="double"/>
+		<param name="RL_dy" value="0" type="double"/>
+		<param name="RL_dz" value="0.45" type="double"/>
+		<param name="RL_R" value="-3.0" type="double"/>
+		<param name="RL_P" value="0" type="double"/>
+		<param name="RL_Y" value="180" type="double"/>
+
+
+		<param name="relative_gps" value="$(arg relative_gps)" />
+		<param name="publish_odom_tf" value="$(arg publish_odom_tf)" />
+	
+	</node>
+	<!-- <node name="node_lane_ekf" pkg="pharos_localization" type="lane_ekf.py" output="screen" /> -->
+	
+
+	
+</launch>

@@ -1,0 +1,21 @@
+<launch>
+	<!-- <include file="$(find pharos_localization)/launch/utm_odometry.launch" /> -->
+	<arg name="relative_gps" default="true" />
+	<arg name="publish_odom_tf" default="true" />
+	<arg name="initpose_fix" default="true" />
+
+	<node name="mcl_ekf" pkg="pharos_localization" type="predict_ekf.py" output="screen">
+		<param name="vehicle_state_topic" value="/vehicle/state2016" />
+		<param name="frame_id" value="/odom" />
+		<param name="child_frame_id" value="/mcl_ekf" />
+		<param name="mcl_odom_topic" value="/odom/mcl" />
+		<param name="bagfile" value="true" />
+
+
+		<param name="relative_gps" value="$(arg relative_gps)" />
+		<param name="publish_odom_tf" value="$(arg publish_odom_tf)" />
+		<param name="initpose_fix" value="$(arg initpose_fix)" />
+	</node>
+	<!-- <node name="node_lane_ekf" pkg="pharos_localization" type="lane_ekf.py" output="screen" />	 -->
+
+</launch>

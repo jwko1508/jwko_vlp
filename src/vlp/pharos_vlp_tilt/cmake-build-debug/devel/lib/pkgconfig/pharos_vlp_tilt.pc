@@ -1,0 +1,8 @@
+prefix=/home/jwkolab/i30_ws/src/pharos/pharos_vlp_tilt/cmake-build-debug/devel
+
+Name: pharos_vlp_tilt
+Description: Description of pharos_vlp_tilt
+Version: 0.0.0
+Cflags: -I/home/jwkolab/i30_ws/src/pharos/pharos_vlp_tilt/cmake-build-debug/devel/include
+Libs: -L/home/jwkolab/i30_ws/src/pharos/pharos_vlp_tilt/cmake-build-debug/devel/lib 
+Requires: 

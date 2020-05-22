@@ -1,0 +1,40 @@
+<launch>
+
+	<arg name="frame_id_" default="vehicle_frame" />
+	<arg name="time_diff_" default="0.07" />
+	<arg name="match_" default="true" />
+	<arg name="offset" default="1.0" />
+	<arg name="decay" default="5" />
+
+	<node name="pharos_velodyne_Rcombine_node" pkg="pharos_mcl" type="pharos_velodyne_Rcombine_node" output="screen">
+
+		<param name="frame_id" value="$(arg frame_id_)" />
+		<param name="time_diff" value="$(arg time_diff_)" />
+		<param name="match" value="$(arg match_)" />
+
+	</node>
+	
+	<node name="pharos_velodyne_Vcombine_node" pkg="pharos_mcl" type="pharos_velodyne_Vcombine_node" output="screen">
+
+		<param name="frame_id" value="$(arg frame_id_)" />
+		<param name="time_diff" value="$(arg time_diff_)" />
+		<param name="match" value="$(arg match_)" />
+
+	</node>
+
+	<node name="pharos_velodyne_roadinfo_node" pkg="pharos_mcl" type="pharos_velodyne_roadinfo_node" output="screen">
+
+		<param name="frame_id" value="$(arg frame_id_)" />
+		<param name="min_intensity" value="100.0" />
+		<param name="decay" value="$(arg decay)" />
+
+	</node>
+
+	<node name="pharos_velodyne_verticalinfo_node" pkg="pharos_mcl" type="pharos_velodyne_verticalinfo_node" output="screen">
+
+		<param name="frame_id" value="$(arg frame_id_)" />
+		<param name="vertical_offset" value="$(arg offset)" />
+
+	</node>
+
+</launch>

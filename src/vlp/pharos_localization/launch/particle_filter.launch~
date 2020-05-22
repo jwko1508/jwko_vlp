@@ -1,0 +1,18 @@
+<launch>
+
+	<arg name="map_file" default="$(find pharos_localization)/maps/intensity_map.yaml"/>
+	<arg name="lane_map_file" default="$(find pharos_localization)/maps/lane_map.yaml"/>
+
+	<!--arg name="map_file" default="$(find pharos_localization)/maps/nare_map.yaml"/-->
+
+	<node name="map_server" pkg="pharos_map_server" type="pharos_map_server" args="$(arg map_file)" output="screen" />
+	<node name="lane_map_server" pkg="pharos_lane_map_server" type="pharos_lane_map_server" args="$(arg map_file_lane)" output="screen" />
+
+	<node name="mcl_tf" pkg="pharos_localization" type="mcl_tf.py" output="screen"  />
+
+	<node name="particle_filter" pkg="pharos_localization" type="particle_filter.py" output="screen">
+
+	</node>
+
+
+</launch>

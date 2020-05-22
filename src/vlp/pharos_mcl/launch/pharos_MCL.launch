@@ -1,0 +1,20 @@
+<launch>
+	<arg name="vertical" default="0.2" />
+	<arg name="vel_gain" default="1.0" />
+	<arg name="vel_noise" default="0.25" />
+
+	
+	<node name="pharos_MCL_Kcity_node" pkg="pharos_mcl" type="pharos_MCL_Kcity_node" output="screen">
+
+		<param name="use_cuda" value="ture" />
+		<param name="use_roadinfo" value="true" />
+		<param name="use_verticalinfo" value="true" />
+
+		<param name="num_particle" value="500" />
+		<param name="num_gps_particle" value="50" />
+		<param name="vertical_gain" value="$(arg vertical)" />
+		<param name="velocity_gain" value="$(arg vel_gain)" />
+		<param name="velocity_noise" value="$(arg vel_noise)" />
+
+	</node>
+</launch>

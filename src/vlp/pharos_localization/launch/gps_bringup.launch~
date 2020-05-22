@@ -1,0 +1,8 @@
+<launch>
+	
+
+	<include file="$(find ublox_gps)/launch/ublox_gps.launch" />
+	<include file="$(find pharos_localization)/launch/utm_odometry.launch" />
+	<include file="$(find pharos_localization)/launch/gps_ekf.launch" />
+
+</launch>

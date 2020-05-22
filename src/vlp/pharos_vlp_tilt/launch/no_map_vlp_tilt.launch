@@ -1,0 +1,263 @@
+
+
+<launch>
+
+<node pkg="pharos_vlp_tilt"         type="vlpt_set_T"     name="vlpt_set_T" output="screen">
+	
+		<param name="T_ROLL" value="-15.0" />
+		<param name="T_PITCH" value="1.0" />
+		<param name="T_YAW" value="2.1" />
+
+		<param name="T_PLUS_X" value="2.5" />
+		<param name="T_MINUS_X" value="-1.8" />
+
+		<param name="T_PLUS_Y" value="1" />
+		<param name="T_MINUS_Y" value="-1" />	
+
+		<param name="T_PLUS_Z" value="20" />
+		<param name="T_MINUS_Z" value="-20" />	
+		<param name="T_MOVE_Y" value="0.5265" />
+
+		<param name="sub_topic" value="vlp_t/my_custom_point_info" />
+		<param name="pub_topic" value="top_my_msg" />
+		<param name="frame_my" value="top_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.68" />
+		<param name="PP_ANGLE" value="19" />
+		<param name="PM_ANGLE" value="11" />
+
+
+	</node>
+
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_T"     name="vlpt_remove_ground_T">
+		<param name="sub_topic" value="top_my_msg" />
+		<param name="pub_topic_ground" value="ground_t" />
+		<param name="pub_topic_objects" value="object_t" />
+		<param name="pub_topic_my_msg" value="before_t_object" />
+		<param name="frame_remove" value="top_velodyne2" />	
+
+		<param name="CAR_HEIGHT_" value="-1.68" />
+		<param name="ALPHA_MAX_" value="20" />
+		<param name="H_MIN_" value="0.15" />
+		<param name="init_ALPHA_MAX_" value="6" />
+		<param name="Long_Distance" value="45" />
+		<param name="SetUnderZ" value="1" />
+		<param name="SET_GROUND_DEG" value ="10" />
+		
+		
+		
+		
+		
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_T"     name="vlpt_filter_T" output="screen">
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_T"     name="vlpt_segmentation_T">
+		<param name="THRESHOLD" value="0.5" />
+		<param name="MIN_OBJECT_NUM" value="1" />
+		<param name="AfterSetHeight" value="1" />
+		<param name="frame_id" value="top_velodyne2" />
+		<param name="sub_topic_name_" value="before_t_object" />	
+		<param name="pub_topic_name_" value="my_t_seg" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_each_T"     name="vlpt_each_T">
+		<param name="CenterThreshold" value="1.5" />
+		<param name="LRThreshold" value="1.0" />
+		<param name="XYTHRESHOLD" value="0.3" />
+		<param name="frame_id_" value="top_velodyne2" />
+		<param name="pub_topic_name_" value="new_top_combine" />	
+		<param name="sub_topic_name_" value="my_t_seg" />
+		
+	</node>
+
+
+	
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_L"     name="vlpt_set_L" output="screen">
+	
+		<param name="L_ROLL" value="-15.0" />
+		<param name="L_PITCH" value="1.0" />
+		<param name="L_YAW" value="2.1" />
+
+		<param name="L_PLUS_X" value="2.5" />
+		<param name="L_MINUS_X" value="-1.8" />
+
+		<param name="L_PLUS_Y" value="0.4" />
+		<param name="L_MINUS_Y" value="-1.5" />	
+
+		<param name="L_PLUS_Z" value="20" />
+		<param name="L_MINUS_Z" value="-20" />	
+		<param name="L_MOVE_Y" value="0.5265" />
+
+		<param name="sub_topic" value="vlp_l/my_custom_point_info" />
+		<param name="pub_topic" value="left_my_msg" />
+		<param name="frame_my" value="left_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+		<param name="PP_ANGLE" value="19" />
+		<param name="PM_ANGLE" value="11" />
+
+	</node>
+
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_L"     name="vlpt_remove_ground_L" output="screen">
+		<param name="sub_topic" value="left_my_msg" />
+		<param name="pub_topic_ground" value="ground_l" />
+		<param name="pub_topic_objects" value="object_l" />
+		<param name="pub_topic_my_msg" value="before_l_object" />
+		<param name="frame_remove" value="left_velodyne2" />	
+
+		<param name="ALPHA_MAX_" value="20" />
+		<param name="H_MIN_" value="0.15" />
+		<param name="init_ALPHA_MAX_" value="6" />
+		<param name="Long_Distance" value="45" />
+		<param name="SetUnderZ" value="1" />
+		<param name="SET_GROUND_DEG" value ="10" />
+		<param name="pt_angle" value ="40" />
+		
+		
+		
+		
+		
+	
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_L"     name="vlpt_filter_L" output="screen">
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_L"     name="vlpt_segmentation_L" output="screen">
+		<param name="THRESHOLD" value="0.5" />
+		<param name="MIN_OBJECT_NUM" value="1" />
+		<param name="AfterSetHeight" value="1" />
+		<param name="frame_id" value="left_velodyne2" />
+		<param name="sub_topic_name_" value="before_l_object" />	
+		<param name="pub_topic_name_" value="my_l_seg" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_each_L"     name="vlpt_each_L" output="screen">
+		<param name="CenterThreshold" value="1.5" />
+		<param name="LRThreshold" value="1.0" />
+		<param name="XYTHRESHOLD" value="0.3" />
+		<param name="frame_id_" value="left_velodyne2" />
+		<param name="pub_topic_name_" value="new_left_combine" />	
+		<param name="sub_topic_name_" value="my_l_seg" />
+		
+	</node>
+
+
+
+
+	
+	<node pkg="pharos_vlp_tilt"         type="vlpt_set_R"     name="vlpt_set_R" >
+	
+		<param name="R_ROLL" value="15.0" />
+		<param name="R_PITCH" value="3.3" />
+		<param name="R_YAW" value="-11.235" /> 
+
+		<param name="R_PLUS_X" value="2.5" />
+		<param name="R_MINUS_X" value="-1.8" />
+
+		<param name="R_PLUS_Y" value="1.2" />
+		<param name="R_MINUS_Y" value="-0.2" />	
+
+		<param name="R_PLUS_Z" value="20" />
+
+		<param name="R_MINUS_Z" value="-20" />	
+	
+		<param name="R_MOVE_Y" value="-0.5265" />
+
+		<param name="sub_topic" value="vlp_r/my_custom_point_info" />
+		<param name="pub_topic" value="right_my_msg" />
+		<param name="frame_my" value="right_velodyne2" />
+		<param name="CAR_HEIGHT" value="-1.62" />
+		<param name="PP_ANGLE" value="19" />
+		<param name="PM_ANGLE" value="11" />
+
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_remove_ground_R"     name="vlpt_remove_ground_R"    >
+		<param name="sub_topic" value="right_my_msg" />
+		<param name="pub_topic_ground" value="ground_r" />
+		<param name="pub_topic_objects" value="object_r" />
+		<param name="pub_topic_my_msg" value="before_r_object" />
+		<param name="frame_remove" value="right_velodyne2" />	
+		
+		<param name="CAR_HEIGHT_" value="-1.62" />
+		<param name="ALPHA_MAX_" value="20" />
+		<param name="H_MIN_" value="0.15" />
+		<param name="init_ALPHA_MAX_" value="6" />
+		<param name="Long_Distance" value="45" />
+		<param name="SetUnderZ" value="1" />
+		<param name="SET_GROUND_DEG" value ="10" />
+		
+	</node>
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_filter_R"     name="vlpt_filter_R" >
+		<param name="map_topic" value="drivable_map_perception_map" />
+		<param name="odom_topic" value="/odom/vehicle" />
+	</node>
+
+
+	<node pkg="pharos_vlp_tilt"         type="vlpt_segmentation_R"     name="vlpt_segmentation_R">
+		<param name="THRESHOLD" value="0.5" />
+		<param name="MIN_OBJECT_NUM" value="1" />s
+		<param name="AfterSetHeight" value="1" />
+		<param name="frame_id" value="right_velodyne2" />
+		<param name="sub_topic_name_" value="before_r_object" />	
+		<param name="pub_topic_name_" value="my_r_seg" />
+		
+	</node>
+
+
+<node pkg="pharos_vlp_tilt"         type="vlpt_each_R"     name="vlpt_each_R" >
+		<param name="CenterThreshold" value="1.5" />
+		<param name="LRThreshold" value="1.0" />
+		<param name="XYTHRESHOLD" value="0.3" />
+		<param name="frame_id_" value="right_velodyne2" />
+		<param name="pub_topic_name_" value="new_right_combine" />	
+		<param name="sub_topic_name_" value="my_r_seg" />
+		
+	</node>
+
+
+
+
+<node pkg="pharos_vlp_tilt"         type="vlpt_LRT_Combine"     name="vlpt_LRT_Combine" output="screen">
+
+    	<param name="LR_THRSHOLD" value="0.5" />
+    	<param name="CENTER_THRSHOLD" value="0.5" />
+		<param name="XYTHRESHOLD" value="0.3" />
+		<param name="all_frame" value="vehicle_frame" />
+		<param name="LimitCenter" value="10" />
+		<param name="pose_gap" value="0.01" />
+		
+
+	</node>
+
+<node pkg="pharos_vlp_tilt"         type="vlpt_pharos_msg"     name="vlpt_pharos_msg">
+
+    		<param name="SET_UNDER_Z" value="1.0" />
+			<param name="all_frame" value="odom" />
+			<param name="odom_topic_name" value="/odom/vehicle" />
+			<param name="map_topic_name" value= "drivable_map_perception_map"/>
+
+			<param name="remove_point_size" value="10" />
+			<param name="Set_bong_distance" value="1" />
+			<param name="Bigvolum" value="300" />
+			<param name="map_size" value="100" />
+
+            <param name="Set_Perception_Distance" value="12" />
+            <param name="XY_AREA" value="0.45" />
+    </node>
+
+
+</launch>

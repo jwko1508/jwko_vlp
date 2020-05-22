@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/jwkolab/i30_ws/src/pharos/pharos_vlp_tilt/cmake-build-debug/devel/setup.sh

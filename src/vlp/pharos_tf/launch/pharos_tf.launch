@@ -1,0 +1,53 @@
+<launch>	
+	<node name="pharos_tf_broadcaster_node" pkg="pharos_tf" type="pharos_tf_node" output="screen">
+
+		<param name="T_velodyne_frame_id" value="top_velodyne" />
+		<param name="T_velodyne_roll" value="0.0" />
+		<param name="T_velodyne_pitch" value="1.0" />
+		<param name="T_velodyne_yaw" value="0.0" />
+		<param name="T_velodyne_x" value="1.0" />
+		<param name="T_velodyne_y" value="0.0" />
+		<param name="T_velodyne_z" value="1.79" />
+
+		<param name="L_velodyne_frame_id" value="left_velodyne" />
+		<param name="L_velodyne_roll" value="-15" />
+		<param name="L_velodyne_pitch" value="1.0" />
+		<param name="L_velodyne_yaw" value="0.0" />
+		<param name="L_velodyne_x" value="1.0" />
+		<param name="L_velodyne_y" value="0.5" />
+		<param name="L_velodyne_z" value="1.62" />
+
+		<param name="R_velodyne_frame_id" value="right_velodyne" />
+		<param name="R_velodyne_roll" value="15" />
+		<param name="R_velodyne_pitch" value="1.0" />
+		<param name="R_velodyne_yaw" value="0.0" />
+		<param name="R_velodyne_x" value="1.0" />
+		<param name="R_velodyne_y" value="-0.5" />
+		<param name="R_velodyne_z" value="1.62" />
+
+		<param name="camera_frame_id" value="camera" />		
+		<param name="camera_roll" value="0.0" />
+		<param name="camera_pitch" value="0.0" />
+		<param name="camera_yaw" value="0.0" />
+		<param name="camera_x" value="1.48" />
+		<param name="camera_y" value="0.0" />
+		<param name="camera_z" value="1.47" />
+
+		<param name="front_bumper_frame_id" value="front_bumper" />
+		<param name="front_bumper_roll" value="0.0" />
+		<param name="front_bumper_pitch" value="0.0" />
+		<param name="front_bumper_yaw" value="0.0" />
+		<param name="front_bumper_x" value="3.5" />
+		<param name="front_bumper_y" value="0.0" />
+		<param name="front_bumper_z" value="0.5" />
+
+		<param name="rear_bumper_frame_id" value="rear_bumper" />
+		<param name="rear_bumper_roll" value="0.0" />
+		<param name="rear_bumper_pitch" value="0.0" />
+		<param name="rear_bumper_yaw" value="0.0" />
+		<param name="rear_bumper_x" value="-1.0" />
+		<param name="rear_bumper_y" value="0.0" />
+		<param name="rear_bumper_z" value="0.5" />
+
+	</node>
+</launch>

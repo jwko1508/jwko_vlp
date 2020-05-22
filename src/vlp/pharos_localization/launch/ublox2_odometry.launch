@@ -1,0 +1,21 @@
+<launch>
+	<arg name="frame" default="mcl_ekf"/>
+	<arg name="fix" default="true"/>
+	<arg name="fix_x" default="302150.0"/>
+	<arg name="fix_y" default="4123350.0"/>
+
+	<param name="frame_id" value="odom" />
+	<param name="novatel_frame_id" value="novatel_ins" />
+	<param name="ublox_frame_id" value="ublox_ant" />
+	<param name="vehicle_frame_id" value="$(arg frame)" />
+
+	<node name="pharos_utm_odometry_node" pkg="gps_common" type="kcity_utm_odometry_node" output="screen">
+		<param name="relative_gps" value="true" />
+		<param name="relative_gps_fix" value="$(arg fix)" />
+		<param name="fix_origin_x" value="(arg fix_x)" />
+		<param name="fix_origin_y" value="(arg fix_y)" />
+		<!-- <param name="fix_origin_z" value="0.0" /> -->
+	</node>
+	
+	<include file="$(find pharos_tf)/launch/pharos_tf.launch" />
+</launch>
