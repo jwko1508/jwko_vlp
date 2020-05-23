@@ -199,11 +199,11 @@ public:
 
         if(pt_front->x != 0 && pt_back->x != 0)
         {
-            alpha_front_L = atanf(fabs(pt_front->z - std_pt->z) / (pt_front->x - std_pt->x));
+            alpha_front_L = atanf((pt_front->z - std_pt->z) / (pt_front->x - std_pt->x));
 
             alpha_front_L = alpha_front_L * 180.0 / M_PI;
 
-            alpha_back_L = atanf(fabs(std_pt->z - pt_back->z) / (std_pt->x - pt_back->x));
+            alpha_back_L = atanf((std_pt->z - pt_back->z) / (std_pt->x - pt_back->x));
 
             alpha_back_L = alpha_back_L * 180.0 / M_PI;
         }
