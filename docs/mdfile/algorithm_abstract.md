@@ -8,7 +8,7 @@
 순서는 아래와 같습니다.
 
 <div>
-<img width="600" src="/docs/images/AnyConv.com__Lidar_algorithm.png">  
+<img width="1000" src="/docs/images/AnyConv.com__Lidar_algorithm.png">  
 </div>
 
 대략 이런 순서이며 PointCloud Library로 Lidar 데이터를 가공합니다.
