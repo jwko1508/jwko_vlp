@@ -7,6 +7,7 @@
 가장 먼저 전체적인 순서에 대해 설명 드리겠습니다.
 순서는 아래와 같습니다.
 
+![순서도](/docs/images/AnyConv.com__Lidar_algorithm.png)
 
 대략 이런 순서이며 PointCloud Library로 Lidar 데이터를 가공합니다.
 또한 순전히 Lidar 데이터만 이용하는 것이 아니라 차량데이터, GPS데이터, MAP데이터까지 이용하여 최적화를 하였습니다.

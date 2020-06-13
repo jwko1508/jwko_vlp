@@ -1,7 +1,5 @@
 # velodyne puck by jwko1508
 
-현대 2019자율주행차경진대회에 참여하며 활동한 인식(Lidar) 파트 활동 자료입니다.
-
 ###### index
 1. [알고리즘 개요](/docs/mdfile/algorithm_abstract.md)
 2. 포인트 전처리 과정
