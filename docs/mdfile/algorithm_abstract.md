@@ -39,10 +39,10 @@ cpoint[] cpoints
 
 ```c
 
-int32 ring              |            float64 x
-int32 hori              |            float64 y
-                        |            float64 z
-                        |            float64 intensity
+int32 ring                  |float64 x
+int32 hori                  |float64 y
+                            |float64 z
+                            |float64 intensity
 
 ```
 
