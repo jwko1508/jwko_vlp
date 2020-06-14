@@ -27,6 +27,12 @@ Driver는 원래 오픈소스로 제공되지만 안에 소스를 건드려서 c
 
 '''c
 
+#include <stdio.h>
+
+int main()
+{
+
+}
 Header header
 time stamp
 info[] infos
