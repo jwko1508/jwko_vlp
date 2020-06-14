@@ -58,9 +58,9 @@ int32 hori                  | float64 y
 <div>
   <img width="400" src="/docs/images/vertical">
   <img width="400" src="/docs/images/horizon">
+  
+  
 </div>
-
-
 
 다음은 cpoint.msg 파일입니다.
 이 파일은 말 그대로 한 Point의 xyz좌표와 intensity값을 나타냅니다.
