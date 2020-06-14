@@ -33,7 +33,18 @@ info[] infos
 cpoint[] cpoints
 
 ```
+이 구성은 custompoint.msg 파일의 구성입니다.
+이 파일 구성안에 info와 cpoint가 더 보이실겁니다.
+이것또한 custom msgs로 다음과 같습니다.
 
+```c
+
+int32 ring                          float64 x
+int32 hori                          float64 y
+                                    float64 z
+                                    float64 intensity
+
+```
 
 
 
