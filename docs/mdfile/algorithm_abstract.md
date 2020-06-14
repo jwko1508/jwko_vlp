@@ -53,6 +53,12 @@ int32 hori                  | float64 y
 이 번호는 그때그때마다 달라지지만 보통 16채널 라이다가 600rpm에 0.2°의 Resolution을 갖고 있을때,
 360°/0.2°를 하여 총 1800개의 보통의 열이 있습니다.
 하지만 Lidar가 한바퀴보다 많이 돌기 때문에 1800개보다 조금더 많습니다.
+아래는 보기쉽게 ring와 hori를 보기쉽게 가시화한 자료입니다.
+
+<div>
+  <img width="500" src="/docs/images/vertical.png">
+  <img width="500" src="/docs/images/horizon.png">
+</div>
 
 다음은 cpoint.msg 파일입니다.
 이 파일은 말 그대로 한 Point의 xyz좌표와 intensity값을 나타냅니다.
