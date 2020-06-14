@@ -39,12 +39,25 @@ cpoint[] cpoints
 
 ```c
 
-int32 ring                  |float64 x
-int32 hori                  |float64 y
-                            |float64 z
-                            |float64 intensity
+int32 ring                  | float64 x
+int32 hori                  | float64 y
+                            | float64 z
+                            | float64 intensity
 
 ```
+
+왼쪽이 info.msg 파일이고 오른쪽이 cpoint.msg 파일입니다.
+설명을 드리자면 info의 ring은 Vertical Resolution 방향 Point의 번호입니다.
+간단히 말씀드리면 만약 16채널 Lidar라면 이 ring의 숫자 범위는 0부터 15까지가 될것입니다.
+마찬가지로 hori는 Horizontal Resolution 방향의 Point 번호입니다.
+이 번호는 그때그때마다 달라지지만 보통 16채널 라이다가 600rpm에 0.2°의 Resolution을 갖고 있을때,
+360°/0.2°를 하여 총 1800개의 보통의 열이 있습니다.
+하지만 Lidar가 한바퀴보다 많이 돌기 때문에 1800개보다 조금더 많습니다.
+
+다음은 cpoint.msg 파일입니다.
+이 파일은 말 그대로 한 Point의 xyz좌표와 intensity값을 나타냅니다.
+
+이 과정에서 적용한 것은 Ring과 Hori를 적용해 주었단 것입니다.
 
 
 
