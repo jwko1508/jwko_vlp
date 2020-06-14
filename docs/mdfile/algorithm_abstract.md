@@ -56,8 +56,8 @@ int32 hori                  | float64 y
 아래는 보기쉽게 ring와 hori를 보기쉽게 가시화한 자료입니다.
 
 <div>
-  <img width="500" src="/docs/images/vertical.png">
-  <img width="500" src="/docs/images/horizon.png">
+  <img width="500" src="/docs/images/vertical">
+  <img width="500" src="/docs/images/horizon">
 </div>
 
 다음은 cpoint.msg 파일입니다.
