@@ -59,8 +59,6 @@ int32 hori                  | float64 y
 <div>
   <img width="400" src="/docs/images/vertical">
   <img width="400" src="/docs/images/horizon">
-  
-  
 </div>
 
 다음은 cpoint.msg 파일입니다.
@@ -104,7 +102,10 @@ Sync에서는 자율주행차량이 고속주행을 하게 되면 Lidar가 스�
 이러한 고속주행으로 인한 오차가 발생하게 되어 차량 데이터 Vehicle State를 이용하여 오차를 보정합니다.
 
 아래는 보정을 하기 전과 보정을 한 후의 사진입니다.
-
+<div>
+  <img width="400" src="/docs/images/sync_before">
+  <img width="400" src="/docs/images/sync_after">
+</div>
 
 
 
