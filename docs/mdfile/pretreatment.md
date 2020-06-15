@@ -224,5 +224,79 @@ for(int i=0; i < save_set_i.size(); i++)
 
 ## 2. Sync Center & Sync
 
-[vlpt_sync_center.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_sync_center.cpp)라는 파일을 기준으로 Vehicle_State_CBf라는 콜백함수를 먼저 보겠습니다.
+[vlpt_sync_center.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_sync_center.cpp)라는 파일을 기준으로 설명하겠습니다.
+
+알고리즘을 설명하기에 앞서 subscribe하는 정보부터 설명드리겠습니다.
+앞부분 코드를 보면
+```c
+sub_left = nh->subscribe(sub_center_left,1 , &vlp_::Left_VLP_CB,this );
+sub_right = nh->subscribe(sub_center_right,1 , &vlp_::Right_VLP_CB,this );
+sub_top = nh->subscribe(sub_center_top,1 , &vlp_::Top_VLP_CB,this );
+sub_vehicle = nh->subscribe(sub_center_vehicle,10 , &vlp_::Vehicle_State_CB,this );
+```
+subscribe를 받는 변수가 있습니다. 이것은 위에서부터 각각 왼쪽,오른쪽,위쪽의 Set data와 차량데이터 Vehicle_State를 받습니다.
+Set data는 10Hz로 0.1초마다 data를 받고 Vehicle_State data는 100Hz로 0.01초마다 데이터를 받습니다. 이러한 시간 차이로 Lidar기반으로 고속주행시 센서오차를 보정하였습니다.
+
+Vehicle_State_CB라는 콜백함수를 먼저 보겠습니다.
+
+```c
+
+pharos_vlp_tilt::VehiclePosePtr vehicle(new pharos_vlp_tilt::VehiclePose);
+
+bicycle_model(vehicle->x, vehicle->y, vehicle->theta ,input->state.velocity, input->state.wheel_angle, 0.01);
+
+```
+콜백함수는 data가 들어올때마다 실행되기때문에 0.01초마다 아래 설명하는 알고리즘이 실행됩니다.
+처음으로 VehiclePos는 차량 정보를 다른 Node로 보내주기 위해 따로 Custom msg를 만들었습니다.
+따라서 vehicle의 변수는 차량정보들을 저장할 변수입니다.
+다음 bicycle_model모델 함수 입니다. 이 함수의 내부는
+
+```c
+void bicycle_model (double &x, double &y, double &theta,
+                    const double &vel, const double &wheel_angle, const double &dt)
+{
+    double ratio = (steer_const - steer_bias) * 3 / M_PI * wheel_angle *steer_const + steer_bias;
+
+    double d = vel*dt;
+    double beta = d / L * tan(wheel_angle*steer_const/ratio);
+
+    x = d * cos(theta);
+    y = d * sin(theta);
+
+    theta = beta;
+    double x_dot = -d * sin(theta);
+    double y_dot = d * cos(theta);
+}
+```
+이렇게 되어있습니다. 이 함수의 인수는 저장할 공간인 변수와 차량데이터의 속도, 휠각도,움직인 시간을 입력하여 차량의 운동방정식을 이용하여 이동한 거리 휠 각도를 산출해냅니다.
+```c
+vehicle->stamp.data = input->header.stamp;
+```
+그 후 그 차량정보의 시간까지 저장을 해줍니다.
+
+```c
+if(vehicle_vec->vehicles.size() == 0)
+{
+    for(int i=0;i<vehicle_stack;i++)
+    {
+        vehicle_vec->vehicles.push_back(*vehicle);
+    }
+}
+
+vehicle_vec->vehicles.push_back(*vehicle);
+```
+이 부분은 자율주행자동차가 처음 주행 시작하는 경우 전역변수인 vehicle_vec 즉 차량정보의 vector변수를 초기 차량정보로 가득 채운다는 의미입니다.
+vehicle_stack은 임의로 정하는 것이지만 저는 25개로 정하였습니다.
+
+에러메시지는 따로 설명하지 않고 넘어가겠습니다.
+
+```c
+if(vehicle_vec->vehicles.size() > vehicle_stack)
+{
+    isVehicleInit = true;
+
+    vehicle_vec->vehicles.erase(vehicle_vec->vehicles.begin() + 0);
+}
+```
+여기는 차량정보의 vector변수가 vehicle_stack 즉 25개가 넘지않게 조절해주는 역할을 합니다.
 
