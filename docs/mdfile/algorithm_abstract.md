@@ -115,9 +115,9 @@ Remove Ground에서는 기본적으로 오픈소스로 나와있는 높이와 �
 
 아래는 Raw Data와 Object, Ground의 사진입니다.
 <div>
-  <img width="300" src="/docs/images/raw_data">
-  <img width="300" src="/docs/images/object">
-  <img width="300" src="/docs/images/ground">
+  <img width="500" src="/docs/images/raw_data">
+  <img width="500" src="/docs/images/object">
+  <img width="500" src="/docs/images/ground">
 </div>
 
 
