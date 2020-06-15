@@ -143,6 +143,7 @@ Segmentation후 사진입니다.
 <div>
   <img width="500" src="/docs/images/segmentation_after">
 </div>
+기존 그냥 Point들로만 이루어져있던 Data가 집합을 이루어 같은 물체의 Point라면 같은 intensity값으로 설정하였습니다.
 
 #### 7. Combine
 
