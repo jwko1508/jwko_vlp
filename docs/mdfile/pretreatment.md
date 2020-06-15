@@ -45,15 +45,48 @@ for (int j = 0; j < left_input_custom.cpoints.size() ; j++)
 여기서 if문은 Lidar 센서 기준 바로 앞의 point를 찾아내기위한 조건문입니다.
 
 ```c
+
 std_pt->x = 0;
-        std_pt->y = 0;
-        std_pt->z = CAR_HEIGHT;
-        if(fabs(pt_front->z - pt_back->z) < 0.02)
-        {
-            std_pt->z = (pt_front->z + pt_back->z) / 2;/*pt_front->z > pt_back->z ?
-                    pt_back->z : pt_front->z;*/
-//            CAR_HEIGHT = std_pt->z;
-        }
+std_pt->y = 0;
+std_pt->z = CAR_HEIGHT;
+if(fabs(pt_front->z - pt_back->z) < 0.02)
+{
+    std_pt->z = (pt_front->z + pt_back->z) / 2;
+}
 
 
 ```
+
+여기서는 바로 앞, 뒤 point와 비교할 기준 point를 저장할 변수를 초기화 해주었습니다.
+의미하는 것은 좌표계가 Lidar 센서 기준이므로 센서에서 차량 높이만큼 내려간 point, 쉽게 말하면 센서 바로 아래 point입니다.
+
+```c
+float alpha_front_L = -100;
+float alpha_back_L = -100;
+
+if(pt_front->x != 0 && pt_back->x != 0)
+{
+    alpha_front_L = atanf((pt_front->z - std_pt->z) / (pt_front->x - std_pt->x));
+
+    alpha_front_L = alpha_front_L * 180.0 / M_PI;
+
+    alpha_back_L = atanf((std_pt->z - pt_back->z) / (std_pt->x - pt_back->x));
+
+    alpha_back_L = alpha_back_L * 180.0 / M_PI;
+}
+
+if(fabs(alpha_front_L - alpha_back_L) < 2 && alpha_front_L != -100)
+{
+    L_Yd_L = (alpha_front_L + alpha_back_L) / 2;
+}
+if(fabs(alpha_front_L) > 5 || fabs(alpha_back_L) > 5)
+{
+    L_Yd_L = L_Yd;
+}
+
+if(pitch_calibration == false)
+{
+    L_Yd_L = L_Yd;
+}
+```
+
