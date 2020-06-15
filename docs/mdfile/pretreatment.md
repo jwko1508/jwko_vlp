@@ -79,6 +79,7 @@ if(fabs(alpha_front_L - alpha_back_L) < 2 && alpha_front_L != -100)
 {
     L_Yd_L = (alpha_front_L + alpha_back_L) / 2;
 }
+ 
 if(fabs(alpha_front_L) > 5 || fabs(alpha_back_L) > 5)
 {
     L_Yd_L = L_Yd;
@@ -89,4 +90,6 @@ if(pitch_calibration == false)
     L_Yd_L = L_Yd;
 }
 ```
+alpha_front_L와 alpha_back_L은 마찬가지로 측정된 기울기를 저장할 변수이며 모두-100으로 초기화해주었습니다.
+
 
