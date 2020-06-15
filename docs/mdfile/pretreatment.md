@@ -223,3 +223,6 @@ for(int i=0; i < save_set_i.size(); i++)
 이것을 마지막으로 이 data들을 다음 Sync Center로 보내줍니다.
 
 ## 2. Sync Center & Sync
+
+[vlpt_sync_center.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_sync_center.cpp)라는 파일을 기준으로 Vehicle_State_CBf라는 콜백함수를 먼저 보겠습니다.
+
