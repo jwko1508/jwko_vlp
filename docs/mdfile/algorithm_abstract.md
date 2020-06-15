@@ -107,10 +107,18 @@ Sync에서는 자율주행차량이 고속주행을 하게 되면 Lidar가 스�
   <img width="400" src="/docs/images/sync_after">
 </div>
 
-#### 4. remove ground
+#### 4. Remove Ground
 
+Remove Ground에서는 기본적으로 오픈소스로 나와있는 높이와 기울기를 이용한 지면제거를 썼습니다.
+하지만 이는 32채널이상의 많은 채널의 Lidar는 상관이 없지만 16채널 정도의 Lidar라면 멀리 스캔하는 채널일 수록 채널간의 간격은 점점 넓어집니다.
+따라서 기존 ring X hori 배열이 위에서 아래로 vertical 방향으로 인덱스 순서가 매겨져있다면 저는 왼쪽에서 오른쪽으로 horizontal 방향 즉 회전방향 기준으로 인덱스 순서를 재배열한 후 지면제거를 하였습니다.
 
-
+아래는 Raw Data와 Object, Ground의 사진입니다.
+<div>
+  <img width="300" src="/docs/images/raw_data">
+  <img width="300" src="/docs/images/object">
+  <img width="300" src="/docs/images/ground">
+</div>
 
 
 
