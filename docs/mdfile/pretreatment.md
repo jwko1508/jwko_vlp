@@ -91,5 +91,35 @@ if(pitch_calibration == false)
 }
 ```
 alpha_front_L와 alpha_back_L은 마찬가지로 측정된 기울기를 저장할 변수이며 모두-100으로 초기화해주었습니다.
+그 후 첫번째 if문은 pt_front와 pt_back에 값이 들어온다면 기울기를 계산해 alpha 변수에 저장합니다.
+두번째 if문은 앞과 뒤의 기울기의 차이가 2도 즉 오차범위 +-2도 안에 앞뒤 기울기가 비슷하고 alpha에 값이 있다면 앞뒤 기울기의 평균값을 변수에 저장합니다.
+세번째는 앞뒤 기울기의 차이가 너무 크다면 원래 직접 측정하여 저장해놓은 평균 기울기를 다시 저장합니다. 이 세번째 if문일 경우는 앞에 물체나 오르막이 있을 경우에 대해 대비하였습니다.
+네번째는 bool로 지금까지 설명한 알고리즘을 켜고 끌수있습니다.
 
+```c
 
+float C_R_Matrix[3][3];
+C_R_Matrix[0][0] = cos(L_Zd*M_PI/180)*cos(L_Yd_L*M_PI/180);
+C_R_Matrix[0][1] = -sin(L_Zd*M_PI/180)*cos(L_Xd*M_PI/180) + cos(L_Zd*M_PI/180)*sin(L_Yd_L*M_PI/180)*sin(L_Xd*M_PI/180);
+C_R_Matrix[0][2] = sin(L_Zd*M_PI/180)*sin(L_Xd*M_PI/180) + cos(L_Zd*M_PI/180)*sin(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
+C_R_Matrix[1][0] = sin(L_Zd*M_PI/180)*cos(L_Xd*M_PI/180);
+C_R_Matrix[1][1] = cos(L_Zd*M_PI/180)*cos(L_Xd*M_PI/180) + sin(L_Zd*M_PI/180)*sin(L_Yd_L*M_PI/180)*sin(L_Xd*M_PI/180);
+C_R_Matrix[1][2] = -cos(L_Zd*M_PI/180)*sin(L_Xd*M_PI/180) + sin(L_Zd*M_PI/180)*sin(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
+C_R_Matrix[2][0] = -sin(L_Yd_L*M_PI/180);
+C_R_Matrix[2][1] = cos(L_Yd_L*M_PI/180)*sin(L_Xd*M_PI/180);
+C_R_Matrix[2][2] = cos(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
+        
+```
+
+이제 위에서 결정한 기울기를 Rotation Matrix에 사용하여 point를 보정하였습니다.
+
+이러한 알고리즘을 작성한 이유는 과속방지턱이나 급정지, 급과속과 같은 큰 흔들림 외란때문이었습니다.
+장점은 흔들림 없이 땅이라는 것을 수평으로 유지할 수 있고 그로인해 높이로 지면 제거의 정확성을 높일 수 있었습니다.
+
+아래 동영상은 이 알고리즘의 결과입니다.
+왼쪽이 적용 전이며, 오른쪽이 적용 후입니다.
+
+<div>
+<iframe width="400" src="/docs/videos/before.mp4">
+<iframe width="400" src="/docs/videos/after.mp4">
+</div>
