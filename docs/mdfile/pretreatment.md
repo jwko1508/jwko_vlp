@@ -120,5 +120,5 @@ C_R_Matrix[2][2] = cos(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
 왼쪽이 적용 전이며, 오른쪽이 적용 후입니다.
 
 
-<iframe width="400" src="/docs/videos/before.mp4" frameborder="0" gesture="media" allowfullscreen=""></iframe>
-<iframe width="400" src="/docs/videos/after.mp4" frameborder="0" gesture="media" allowfullscreen=""></iframe>
+<iframe width="640" height="360" src="/docs/videos/before.mp4" frameborder="0" gesture="media" allowfullscreen=""></iframe>
+<iframe width="640" height="360" src="/docs/videos/after.mp4" frameborder="0" gesture="media" allowfullscreen=""></iframe>
