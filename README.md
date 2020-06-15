@@ -1,6 +1,8 @@
 # velodyne puck by jwko1508
 
-[bag file](https://drive.google.com/file/d/10TMqJfjQOdHKxvL0Uat-nrA-G-aPBiDz/view?usp=sharing) (녹화 파일)
+[bag file](https://drive.google.com/file/d/10TMqJfjQOdHKxvL0Uat-nrA-G-aPBiDz/view?usp=sharing) (녹화 파일) 1.3GB
+
+source 코드가 있는 폴더의 경로는
 
 ###### index
 1. [알고리즘 개요](/docs/mdfile/algorithm_abstract.md)
