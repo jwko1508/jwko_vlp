@@ -141,20 +141,14 @@ for(int i=0; i<left_input_custom.cpoints.size(); i++)
 
     save_i_info.push_back(i);
 
-
-
-
-
     if( left_input_custom.infos[i].hori != left_input_custom.infos[i+1].hori || i+1 == left_input_custom.cpoints.size() ) ///변화하는 순간이므로. ring을 재 설정해주자.
-//                cout<<"changed"<<endl;
     {
         int A[16];
 
         for(int array_n=0; array_n<16; array_n++)
         {
             A[array_n] = -1;
-        }   ///@won 단순한 초기값 정렬
-            ///여기서 array_n에는 링의 숫자가 그리고 대입값에는 i값을 넣어야 한다.
+        }   
 
         for(int set_n=0; set_n < save_i_info.size(); set_n++)
         {
@@ -164,7 +158,7 @@ for(int i=0; i<left_input_custom.cpoints.size(); i++)
             left_input_custom.infos[save_i_info[set_n]].hori = set_hori;
         }
 
-        set_hori++; ///@won 수평 성분 +해준다.
+        set_hori++;
 
         for(int next_array_n = 0; next_array_n < 16; next_array_n++)
         {
@@ -175,5 +169,57 @@ for(int i=0; i<left_input_custom.cpoints.size(); i++)
         save_i_info.clear();
     }
 
-}/// @won 여기를 나오면 save_set_i_push_back은 i가 나열되어있는데 그 값들은 뒤죽박죽이다 그냥 save_set_i 를 순서대로 값들을 넣으면 된다.
+}
 ```
+이제 본래 Set의 목적인 ring x hori 배열로 정렬하는 부분입니다.
+한 A[16]배열의 Data를 전부 -1로 초기화를 하고 Data가 존재하는 ring번째 인덱스만 저장을 합니다.
+다음 hori도 마찬가지로 for문으로 적용합니다.
+이걸 함으로써 Lidar의 단점인 인식 거리 범위 외의 데이터를 찾아낼 수 있게 됩니다.
+
+```c
+velodyne_msgs::custompoint new_my_custom_info;
+
+for(int i=0; i < save_set_i.size(); i++)
+{
+    velodyne_msgs::cpoint set_point;
+    velodyne_msgs::info set_info;
+    pcl::PointXYZI pt;
+
+    set_point.x = (C_R_Matrix[0][0]*left_input_custom.cpoints.at(save_set_i[i]).x) + (C_R_Matrix[0][1]*left_input_custom.cpoints.at(save_set_i[i]).y) +
+                  (C_R_Matrix[0][2]*left_input_custom.cpoints.at(save_set_i[i]).z);
+
+    set_point.y = (C_R_Matrix[1][0]*left_input_custom.cpoints.at(save_set_i[i]).x) + (C_R_Matrix[1][1]*left_input_custom.cpoints.at(save_set_i[i]).y) +
+                  (C_R_Matrix[1][2]*left_input_custom.cpoints.at(save_set_i[i]).z);
+
+    set_point.z = (C_R_Matrix[2][0]*left_input_custom.cpoints.at(save_set_i[i]).x) + (C_R_Matrix[2][1]*left_input_custom.cpoints.at(save_set_i[i]).y) +
+                  (C_R_Matrix[2][2]*left_input_custom.cpoints.at(save_set_i[i]).z);
+    set_point.intensity = left_input_custom.cpoints.at(save_set_i[i]).intensity;
+
+    set_info = left_input_custom.infos.at( save_set_i[i] );
+
+    /// @won Right Frame
+    if(set_point.x <= L_PX && set_point.x >=L_MX && set_point.y <=L_PY && set_point.y >= L_MY && set_point.z <=L_PZ && set_point.z >=L_MZ )
+    {}
+    else
+    {
+        if(set_point.z <= -2.2)
+        {}
+        else {
+            new_my_custom_info.infos.push_back(set_info);
+            new_my_custom_info.cpoints.push_back(set_point);
+        }
+        pt.x = set_point.x;
+        pt.y = set_point.y;
+        pt.z = set_point.z;
+        pt.intensity = set_point.intensity;
+        pcl_output->push_back(pt);
+    }
+
+}
+```
+마지막으로 아까의 Rotation Matrix를 모든 point의 xyz에 적용을 하고 ring과 hori 정보, Data까지 저장을 합니다. 
+이 과정중 if문이 있습니다.
+이 if문에는 차에 위치한 point나 지면에 반사되는 물체가 생겼을때 땅 속으로 point가 생기는 것을 방지하기 위해 차량의 규격범위와 센서로부터 -2.2m 차량보다 조금 더 아래에 위치한 point는 제외하였습니다.
+이것을 마지막으로 이 data들을 다음 Sync Center로 보내줍니다.
+
+## 2. Sync Center & Sync
