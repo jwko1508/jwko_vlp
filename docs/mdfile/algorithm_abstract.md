@@ -127,8 +127,24 @@ Remove Ground에서는 기본적으로 오픈소스로 나와있는 높이와 �
 이름에서와 같이 Map Data와 GPS Data를 이용하여 map에서 도로영역 이외에는 잘라내었습니다.
 이 부분은 최적화에 많은 영역을 주어 많이 활용하였습니다.
 
-filter후 사진입니다.
+filter 후 사진입니다.
 <div>
   <img width="500" src="/docs/images/map_filter_after">
 </div>
+위 Remove Ground 단계 Object에서 도로영역 부분만 골라내어진 데이터가 되어 훨씬 적은양의 데이터를 처리하게 되었습니다.
 
+#### 6. Segmentatiom
+
+Segmentation입니다.
+이 코드 또한 기존 Clustering 기법을 베이스로 작성하였습니다.
+뜻은 분할이고 Point들을 거리 기준으로 '이 Point들이 서로 가깝다면 하나의 집합이고 물체이다'라고 하였습니다.
+
+Segmentation후 사진입니다.
+<div>
+  <img width="500" src="/docs/images/segmentation_after">
+</div>
+
+#### 7. Combine
+
+Segmentation에서 하나의 물체를 판단하여 집합으로 묶었지만 완벽히 처리되지 않는다는 단점이 있습니다.
+그래서 
