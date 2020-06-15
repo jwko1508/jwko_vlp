@@ -4,7 +4,7 @@
 
 ## 1. Set
 
-vlpt_set_L.cpp라는 파일을 기준으로 LeftSetVertical이라는 콜백함수를 보겠습니다.
+[vlpt_set_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_set_L.cpp)라는 파일을 기준으로 LeftSetVertical이라는 콜백함수를 보겠습니다.
 
 ```c
 
