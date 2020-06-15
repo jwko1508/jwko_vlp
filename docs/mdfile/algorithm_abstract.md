@@ -128,5 +128,7 @@ Remove Ground에서는 기본적으로 오픈소스로 나와있는 높이와 �
 이 부분은 최적화에 많은 영역을 주어 많이 활용하였습니다.
 
 filter후 사진입니다.
-
+<div>
+  <img width="500" src="/docs/images/map_filter_after">
+</div>
 
