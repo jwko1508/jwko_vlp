@@ -117,9 +117,10 @@ C_R_Matrix[2][2] = cos(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
 장점은 흔들림 없이 땅이라는 것을 수평으로 유지할 수 있고 그로인해 높이로 지면 제거의 정확성을 높일 수 있었습니다.
 
 아래 동영상은 이 알고리즘의 결과입니다.
-왼쪽이 적용 전이며, 오른쪽이 적용 후입니다.
+왼쪽이 적용 전이며, 오른쪽이 적용 후입니다. 사진을 클릭하면 동영상으로 이동합니다.
 
 [<img src="/docs/images/before_image" width="300">](/docs/videos/before.mp4)
 [<img src="/docs/images/after_image" width="300">)](/docs/videos/after.mp4)
+아래 두개는 마찬가지로 적용 전후이고 위에 같은장소를 바로 옆에서 봤을 때입니다.
 [<img src="/docs/images/before_image2" width="300">)](/docs/videos/before2.mp4)
 [<img src="/docs/images/after_image2" width="300">)](/docs/videos/after2.mp4)
