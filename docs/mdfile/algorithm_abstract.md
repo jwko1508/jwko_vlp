@@ -107,6 +107,9 @@ Sync에서는 자율주행차량이 고속주행을 하게 되면 Lidar가 스�
   <img width="400" src="/docs/images/sync_after">
 </div>
 
+#### 4. remove ground
+
+
 
 
 
