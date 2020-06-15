@@ -2,7 +2,7 @@
 
 [bag file](https://drive.google.com/file/d/10TMqJfjQOdHKxvL0Uat-nrA-G-aPBiDz/view?usp=sharing) (녹화 파일) 1.3GB
 
-source 코드가 있는 폴더의 경로는
+[source 코드](src/vlp/pharos_vlp_tilt/src/)
 
 ###### index
 1. [알고리즘 개요](/docs/mdfile/algorithm_abstract.md)
