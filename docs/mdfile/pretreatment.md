@@ -127,3 +127,53 @@ C_R_Matrix[2][2] = cos(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
 [<img src="/docs/images/before_image2" width="300">](/docs/videos/before2.mp4)
 [<img src="/docs/images/after_image2" width="300">](/docs/videos/after2.mp4)
 
+
+```c
+std::vector<int> save_i_info; ///수직 성분 바뀌기 전에 한번 i정보를 다 저장해주는것.
+std::vector<int> save_set_i;
+save_set_i.clear();
+
+int set_hori = 1;
+
+for(int i=0; i<left_input_custom.cpoints.size(); i++)
+{
+    using namespace std;
+
+    save_i_info.push_back(i);
+
+
+
+
+
+    if( left_input_custom.infos[i].hori != left_input_custom.infos[i+1].hori || i+1 == left_input_custom.cpoints.size() ) ///변화하는 순간이므로. ring을 재 설정해주자.
+//                cout<<"changed"<<endl;
+    {
+        int A[16];
+
+        for(int array_n=0; array_n<16; array_n++)
+        {
+            A[array_n] = -1;
+        }   ///@won 단순한 초기값 정렬
+            ///여기서 array_n에는 링의 숫자가 그리고 대입값에는 i값을 넣어야 한다.
+
+        for(int set_n=0; set_n < save_i_info.size(); set_n++)
+        {
+            A[ left_input_custom.infos[ save_i_info[set_n] ].ring ]
+                    = save_i_info[set_n];
+
+            left_input_custom.infos[save_i_info[set_n]].hori = set_hori;
+        }
+
+        set_hori++; ///@won 수평 성분 +해준다.
+
+        for(int next_array_n = 0; next_array_n < 16; next_array_n++)
+        {
+            if(A[next_array_n] != -1)
+            save_set_i.push_back( A[next_array_n] );
+        }
+
+        save_i_info.clear();
+    }
+
+}/// @won 여기를 나오면 save_set_i_push_back은 i가 나열되어있는데 그 값들은 뒤죽박죽이다 그냥 save_set_i 를 순서대로 값들을 넣으면 된다.
+```
