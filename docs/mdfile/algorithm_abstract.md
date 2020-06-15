@@ -120,6 +120,13 @@ Remove Ground에서는 기본적으로 오픈소스로 나와있는 높이와 �
   <img width="500" src="/docs/images/ground">
 </div>
 
+#### 5. Map Filter
 
+이번에는 Map Filter입니다.
+이 코드도 직접 작성하지는 않았지만 이해를 하여 적용하였습니다.
+이름에서와 같이 Map Data와 GPS Data를 이용하여 map에서 도로영역 이외에는 잘라내었습니다.
+이 부분은 최적화에 많은 영역을 주어 많이 활용하였습니다.
+
+filter후 사진입니다.
 
 
