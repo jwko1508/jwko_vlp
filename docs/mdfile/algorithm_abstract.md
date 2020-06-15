@@ -171,4 +171,4 @@ Combine에서는 집합 Data들의 병합 및 다른 Lidar와의 병합을 하�
 또한 Ros와 관련한 코드는 이미 알고있다고 생각하고 설명하고 전역 변수 선언에 관해서도 편의상 생략하겠습니다.
 
 
-[목차](/README.md)|[Next](/docs/mdfile/pretreatment.md)
+[목차](/README.md) | [Next](/docs/mdfile/pretreatment.md)
