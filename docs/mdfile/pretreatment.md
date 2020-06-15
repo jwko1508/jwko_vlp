@@ -119,7 +119,7 @@ C_R_Matrix[2][2] = cos(L_Yd_L*M_PI/180)*cos(L_Xd*M_PI/180);
 아래 동영상은 이 알고리즘의 결과입니다.
 왼쪽이 적용 전이며, 오른쪽이 적용 후입니다.
 
-[![before](/docs/videos/before_image)](/docs/videos/before.mp4)
-[![before](/docs/videos/after_image)](/docs/videos/after.mp4)
-[![before](/docs/videos/before_image2)](/docs/videos/before2.mp4)
-[![before](/docs/videos/after_image2)](/docs/videos/after2.mp4)
+[![before](/docs/images/before_image)](/docs/videos/before.mp4)
+[![before](/docs/images/after_image)](/docs/videos/after.mp4)
+[![before](/docs/images/before_image2)](/docs/videos/before2.mp4)
+[![before](/docs/images/after_image2)](/docs/videos/after2.mp4)
