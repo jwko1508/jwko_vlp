@@ -104,8 +104,8 @@ Sync에서는 자율주행차량이 고속주행을 하게 되면 Lidar가 스�
 
 아래는 보정을 하기 전과 보정을 한 후의 사진입니다.
 <div>
-  <img width="400" src="/docs/images/sync_before">
-  <img width="400" src="/docs/images/sync_after">
+  <img width="300" src="/docs/images/sync_before">
+  <img width="300" src="/docs/images/sync_after">
 </div>
 
 #### 4. Remove Ground
