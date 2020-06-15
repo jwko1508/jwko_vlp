@@ -42,3 +42,18 @@ for (int j = 0; j < left_input_custom.cpoints.size() ; j++)
 ```
 이 부분은 처음 임의의 point 변수 pt_front와 pt_back의 x좌표를 0으로 임의의 info 변수 info_f와 info_B의 ring을 100으로 초기화를 해줍니다.
 이 임의의 변수들은 Lidar 센서 기준으로 바로 앞에 있는 point와 뒤에 있는 Point를 저장하기 위한 역할을 합니다.
+여기서 if문은 Lidar 센서 기준 바로 앞의 point를 찾아내기위한 조건문입니다.
+
+```c
+std_pt->x = 0;
+        std_pt->y = 0;
+        std_pt->z = CAR_HEIGHT;
+        if(fabs(pt_front->z - pt_back->z) < 0.02)
+        {
+            std_pt->z = (pt_front->z + pt_back->z) / 2;/*pt_front->z > pt_back->z ?
+                    pt_back->z : pt_front->z;*/
+//            CAR_HEIGHT = std_pt->z;
+        }
+
+
+```
