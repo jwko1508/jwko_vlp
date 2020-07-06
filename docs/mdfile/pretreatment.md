@@ -271,7 +271,7 @@ void bicycle_model (double &x, double &y, double &theta,
 ```
 이렇게 되어있고, 아래 그림을 참고하였습니다.
 
-![bicycle_model](/docs/images/bicycle_model){ width: 400}
+![bicycle_model](/docs/images/bicycle_model){ width: 400px;}
 
 이 함수의 인수는 저장할 공간인 변수와 차량데이터의 속도, 휠각도,움직인 시간을 입력하여 차량의 운동방정식을 이용하여 이동한 거리 휠 각도를 산출해냅니다.
 ```c
