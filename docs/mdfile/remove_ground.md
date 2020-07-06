@@ -1,9 +1,11 @@
 [목차](/README.md)          |           [Previous](/docs/mdfile/pretreatment.md)
-# 전처리과정
+# 지면제거 알고리즘
 
-전처리 과정에는 Set 코드와 Sync 코드가 해당됩니다.
+지면제거 알고리즘에서는 remove_ground 코드와 filter 코드를 설명하겠습니다.
 
-## 1. Set
+## 1. Remove Ground
+
+
 
 
 [목차](/README.md) | [Next](/docs/mdfile/clustering.md)
