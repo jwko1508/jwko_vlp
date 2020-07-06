@@ -323,4 +323,16 @@ for(int i=0; i<vehicle_vec->vehicles.size(); i++)
 }
 ```
 
-Rotation Matrix는 쌓아놓은 vehicle_vec 안의 
+Rotation Matrix는 쌓아놓은 vehicle_vec 안의 정보들 중 가장 마지막 인덱스, 즉 가장 최근 정보의 좌표계 기준으로 모든 정보를 평행 이동해주는 회전 행렬입니다.
+for문안의 내용은 모든정보를 평행이동시켜주는 과정입니다.
+
+여기까지 Sync Center에 관해 설명하였습니다.
+
+다음은 [vlpt_sync_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_sync_L.cpp)라는 파일을 기준으로 설명하겠습니다.
+
+```c
+
+```
+
+
+
