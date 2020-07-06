@@ -330,13 +330,148 @@ for(int i=0; i<vehicle_vec->vehicles.size(); i++)
 Rotation Matrix는 쌓아놓은 vehicle_vec 안의 정보들 중 가장 마지막 인덱스, 즉 가장 최근 정보의 좌표계 기준으로 모든 정보를 평행 이동해주는 회전 행렬입니다.
 for문안의 내용은 모든정보를 평행이동시켜주는 과정입니다.
 
+위 설명하였던 100hz 차량정보를 subscribe 될 때 실행되는 Vehicle_State_CB와 다르게 
+왼쪽, 오른쪽, 가운데 Lidar 정보가 subscribe 될 때 Left_VLP_CB, Right_VLP_CB, Top_VLP_CB라는 콜백함수도 있습니다.
+
+Left_VLP_CB, Right_VLP_CB는 단순히 왼쪽과 오른쪽의 정보가 들어왔는지 아닌지만 확인하기 위해 만들었습니다.
+
+셋 중 가장 중요한 Top_VLP_CB 입니다. 이유는 모든 point 하나하나를 전부 가운데 Lidar의 마지막 point 기준의 시간으로 바꾸려고 하기 때문입니다.
+
+```c
+if(!isLeftInit || !isRightInit || !isVehicleInit)
+{
+    return;
+}
+```
+처음은 왼쪽, 오른쪽, 차량정보가 subcribe 되어있지 않으면 return한다는 단순한 내용입니다.
+
+```c
+pharos_vlp_tilt::VehiclePoseArrayPtr store_vehicle(new pharos_vlp_tilt::VehiclePoseArray);
+
+store_vehicle = vehicle_vec;
+
+store_vehicle->header.stamp = input.header.stamp;
+
+pub_for_sync.publish(store_vehicle);
+```
+
+위는 단순히 차량정보를 다른 변수에 저장을 합니다. 하지만 중요한 것은 가운데 Lidar가 들어온 시간을 header에 저장을 한다는 것입니다.
+이 과정이 무엇보다 중요합니다.
+
 여기까지 Sync Center에 관해 설명하였습니다.
 
 다음은 [vlpt_sync_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_sync_L.cpp)라는 파일을 기준으로 설명하겠습니다.
 
-```c
+처음 전역변수를 설명하지 않으면 이해를 못할 수 있기 때문에 이번에는 전역변수부터 설명하겠습니다.
 
+```c
+double diff_value;
+bool isTimeLeft;
+bool isErrorHori = false;
+bool isLeftInit = false;
+
+float L_velodyne_x , L_velodyne_y , L_velodyne_z;
+
+std::vector<velodyne_msgs::custompoint> global_left;
+```
+diff_value, isTimeLeft 이 두개는 단순히 이 처리과정이 얼마나 걸리는지 시간을 측정하고 가시화시키기 위한 전역변수입니다.
+isErrorHori는 제대로된 point 정보가 들어있지 않는 것을 편하게 구분하기 위하여 선언하였습니다.
+isLeftInit는 Sync를 가운데 Lidar(Top_velodyne) 기준으로 하기 때문에 가운데 Lidar의 정보가 들어오기전에 왼쪽 Lidar(Left_velodyne)의 point 정보가 반드시 존재하여야 합니다. 따라서 이 왼쪽 라이다의 정보가 존재하는지 하지 않는지 구분하기 위해 선언하였습니다.
+L_velodyne_x,y,z는 이 자율주행차의 차축, 즉 모든 frame의 parent frame과의 거리입니다.
+global_left는 왼쪽 Lidar의 정보는 왼쪽 기준으로 저장되어있습니다. 이것을 차축 기준으로 평행이동하여 저장할 변수입니다. 
+
+
+다음은 vlpt_sync_L.cpp 안의 Left_VLP_CB 콜백함수를 보겠습니다.
+
+```c
+velodyne_msgs::custompointPtr left(new velodyne_msgs::custompoint);
+*left = input;
+
+isLeftInit =true;
+
+for (int i = 0; i < left->cpoints.size(); i++)
+{
+    left->cpoints[i].x += L_velodyne_x;
+    left->cpoints[i].y += L_velodyne_y;
+}
+```
+앞서 설명하였듯이 왼쪽 정보를 차축기준으로 평행이동하기 위한 과정입니다. 
+
+이 부분 뒤 코드는 저장되는 point정보들의 묶음 수를 조절하기위한 코드이기 때문에 따로 설명하지 않겠습니다.
+
+본격적으로 Vehicle_Top_CB 콜백함수를 보겠습니다.
+이 콜백함수는 가운데 Lidar의 정보를 subscribe하는 
+
+```c
+pharos_vlp_tilt::VehiclePoseArrayPtr store_vehicle(new pharos_vlp_tilt::VehiclePoseArray);
+velodyne_msgs::custompointPtr point_(new velodyne_msgs::custompoint);
+
+store_vehicle = input;
 ```
 
+우선 subscribe 된 정보를 가공하기위해 변수를 선언하여 저장하였습니다.
+
+```c
+double ltime = store_vehicle->header.stamp.toSec() - global_left[1].header.stamp.toSec();
+*point_ = global_left[1];
+
+if(ltime < 0)
+{
+    ltime = store_vehicle->header.stamp.toSec() - global_left[0].header.stamp.toSec();
+    *point_ = global_left[0];
+}
+```
+
+이 부분은 가운데와 왼쪽의 Lidar의 시간을 비교하여 ltime 이라는 변수에 저장을 하고 point_라는 변수에 왼쪽 정보를 저장하였습니다.
+아래 if문을 추가한 이유는 혹시 데이터가 누락 되거나 가운데 Lidar의 정보보다 나중에 들어온 데이터를 골라내기 위해 추가하였습니다.
+
+```c
+for (int j = point_->cpoints.size() - 1; j >= 0; j--)
+{
+    int lt_hori = ltime * 18000;
+
+    int num = (point_->infos[point_->cpoints.size() - 1].hori - point_->infos[j].hori + lt_hori) / 180;
+
+    if(lt_hori < 0 && j == point_->cpoints.size() - 1 && isErrorHori == false)
+    {
+        isErrorHori = true;
+        ROS_ERROR("Sync_L is error!!!!!!!!! : %d",lt_hori);
+    }
+
+    Eigen::Vector2d position;
+    position.x() = point_->cpoints[j].x;
+    position.y() = point_->cpoints[j].y;
+
+    position.x() = position.x() + store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].x + (store_vehicle->vehicles[store_vehicle->vehicles.size() - 1 - num].x - store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].x)/180 * (180 - (point_->infos[point_->cpoints.size() - 1].hori - point_->infos[j].hori + lt_hori) % 180);
+    position.y() = position.y() + store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].y + (store_vehicle->vehicles[store_vehicle->vehicles.size() - 1 - num].y - store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].y)/180 * (180 - (point_->infos[point_->cpoints.size() - 1].hori - point_->infos[j].hori + lt_hori) % 180);
+
+//            std::cout<<position.x()<<std::endl;
+
+    double point__theta;
+    point__theta = store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].theta + (store_vehicle->vehicles[store_vehicle->vehicles.size() - 1 - num].theta - store_vehicle->vehicles[store_vehicle->vehicles.size() - 2 - num].theta)/180 * (180 - (point_->infos[point_->cpoints.size() - 1].hori - point_->infos[j].hori + lt_hori) % 180);
 
 
+    Eigen::Matrix2d rotation2Dmatrix;
+    rotation2Dmatrix << cos(point__theta), -sin(point__theta),
+            sin(point__theta), cos(point__theta);
+
+    position = rotation2Dmatrix * position;
+
+    point_->cpoints[j].x = position.x() - L_velodyne_x;
+    point_->cpoints[j].y = position.y() - L_velodyne_y;
+}
+```
+
+velodyne의 Lidar제품은 0.1초에 대략 1800개의 point 열을 같습니다.
+이 point열이라는 것은 수평방향으로만 생각한 point의 갯수입니다.
+따라서 1초에 18000개의 point를 갖습니다. 이 18000이라는 수를 ltime에 곱하게 되면 이 ltime이라는 시간동안 스캔된 point 열의 갯수가 구해집니다.
+이 구해진 lt_hori과 선형보간법을 이용하여 차량이 이동하면서 생긴 Lidar의 오차를 보정합니다.
+선형보간법에서 사용되는 기준 좌표는 앞에 store_vehicle에 저장된 차량 정보입니다.
+
+이 차량정보의 이동거리, 차량 조향각을 이용하여 선형보간법 하여 각각 point하나하나에 맞는 오차를 보정하였습니다.
+
+더 자세히 설명하기 위해 사진자료를 첨부하겠습니다.
+
+[사진자료]
+
+아래는 publish 내용과 가시화를 위한 과정이기 때문에 설명하지 않겠습니다.
