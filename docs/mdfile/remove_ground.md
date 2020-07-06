@@ -87,14 +87,13 @@ for (int index = 0; index < input->cpoints.size(); index++)
 
 하나의 point열을 생각해보겠습니다.
 만약 ring 정보가 1,3,5,6,7인 point가 존재한다고하면 배열되어있는 정보는 아래와 같을 것입니다.
-숫자 위의 --- 표시는 1행의 표를 만들수 없기 때문에 넣어둔 것이어서 없다고 생각하겠습니다.
----|---|---|---|---|
+<span style="color:red">0</span>|<span style="color:red">1</span>|<span style="color:red">2</span>|<span style="color:red">3</span>|<span style="color:red">4</span>|
 ---|---|---|---|---|
 1|3|5|6|7|
 
 이렇게 point마다 ring정보를 표시해 두었기 때문에 빈공간의 데이터가 몇번째 ring인지는 금방 찾을 수 있습니다.
 따라서 이 for문은 빈공간의 데이터를 아래처럼 표시합니다.
----|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+<span style="color:red">0</span>|<span style="color:red">1</span>|<span style="color:red">2</span>|<span style="color:red">3</span>|<span style="color:red">4</span>|<span style="color:red">5</span>|<span style="color:red">6</span>|<span style="color:red">7</span>|<span style="color:red">8</span>|<span style="color:red">9</span>|<span style="color:red">10</span>|<span style="color:red">11</span>|<span style="color:red">12</span>|<span style="color:red">13</span>|<span style="color:red">14</span>|<span style="color:red">15</span>|
 ---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 0|1|-1|3|-1|5|6|7|-1|-1|-1|-1|-1|-1|-1|-1|
 
