@@ -475,3 +475,7 @@ velodyne의 Lidar제품은 0.1초에 대략 1800개의 point 열을 같습니다
 [사진자료]
 
 아래는 publish 내용과 가시화를 위한 과정이기 때문에 설명하지 않겠습니다.
+
+결과는 알고리즘개요 부분에서 첨부하였듯이
+
+[목차](/README.md) | [Next](/docs/mdfile/remove_ground.md)
