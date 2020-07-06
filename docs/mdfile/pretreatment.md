@@ -301,3 +301,26 @@ if(vehicle_vec->vehicles.size() > vehicle_stack)
 ```
 여기는 차량정보의 vector변수가 vehicle_stack 즉 25개가 넘지않게 조절해주는 역할을 합니다.
 
+```c
+Eigen::Matrix2d rotation2Dmatrix;
+rotation2Dmatrix << cos(vehicle_vec->vehicles.back().theta), -sin(vehicle_vec->vehicles.back().theta),
+        sin(vehicle_vec->vehicles.back().theta), cos(vehicle_vec->vehicles.back().theta);
+
+for(int i=0; i<vehicle_vec->vehicles.size(); i++)
+{
+    vehicle_vec->vehicles[i].x -= vehicle_vec->vehicles.back().x;
+
+    Eigen::Vector2d position;
+    position.x() = vehicle_vec->vehicles[i].x;
+    position.y() = vehicle_vec->vehicles[i].y;
+
+    position = rotation2Dmatrix * position;
+
+    vehicle_vec->vehicles[i].x = position.x();
+    vehicle_vec->vehicles[i].y = position.y();
+
+    vehicle_vec->vehicles[i].theta -= vehicle_vec->vehicles.back().theta;
+}
+```
+
+Rotation Matrix는 쌓아놓은 vehicle_vec 안의 
