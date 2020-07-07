@@ -266,6 +266,9 @@ least_square_method 함수입니다.
 
 ## 2. Map Filter
 
+이번에는 
+[vlpt_filter_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_filter_L.cpp)라는 파일을 기준으로 RemoveGround이라는 콜백함수를 보겠습니다.
+
 
 
 
