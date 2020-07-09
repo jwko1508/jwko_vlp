@@ -263,6 +263,8 @@ least_square_method 함수입니다.
 이 함수로 위 최소제곱법으로 나열한 vector와 실제 vector의 값이 차이가 적다면 땅이라고 조건을 추가하였습니다.
 
 이 함수 이후 코드는 가시화와 publish를 위한 과정입니다.
+이 publish 과정에서 object 데이터와 ground 데이터로 나눠지게 됩니다.
+실질적으로 쓸 object 데이터는 Map Filter를 위하여 publish하게 되고 ground 데이터는 Local 파트에서 차선 인식을 위해 publish하게 됩니다.
 
 ## 2. Map Filter
 
@@ -286,9 +288,161 @@ void MapCB(const nav_msgs::OccupancyGridPtr& map)
 ```
 그냥 단순히 선언해둔 전역변수에 데이터들을 저장하였습니다.
 
-다음은 LeftMapFiter 콜백함수입니다.
+
+다음은 LeftMapFiter 콜백함수입니다. 이 때까지와 같은 저장할 변수 선언, 에러메시지 출력, publish, 시각화 과정은 생략하도록 하겠습니다.
+
+일단 기본적으로 odomed_data에는 subscribe 받아온 Lidar데이터를 저장하였습니다.
+
+```c
+Eigen::Quaternionf q;
+q.x() = Odom_.pose.pose.orientation.x;
+q.y() = Odom_.pose.pose.orientation.y;
+q.z() = Odom_.pose.pose.orientation.z;
+q.w() = Odom_.pose.pose.orientation.w;
+auto euler = q.toRotationMatrix().eulerAngles(0, 1, 2);
+
+Eigen::AngleAxisf init_rotation02_x(euler[0], Eigen::Vector3f::UnitX());
+Eigen::AngleAxisf init_rotation02_y(euler[1], Eigen::Vector3f::UnitY());
+Eigen::AngleAxisf init_rotation02_z(euler[2], Eigen::Vector3f::UnitZ()); // imu <-> odom
 
 
+Eigen::Translation3f init_translation02((Odom_.pose.pose.position.x),
+                                        (Odom_.pose.pose.position.y),
+                                        (Odom_.pose.pose.position.z));
+
+
+Eigen::Matrix4f RT02 = (init_translation02 * init_rotation02_z * init_rotation02_y *
+                        init_rotation02_x).matrix();
+```
+이 부분은 GPS 데이터가 들어있는 Odom_이라는 변수와 Eigen 라이브러리를 이용하여 차량의 시작지점, 즉 절대좌표를 기준으로 변환해주는 회전 변환행렬을 만들어주는 역할을 합니다.
+
+```c
+double resolutionInverse = 1 / drivable_map->info.resolution;
+```
+resolutionInverse 이 변수는 1/맵 데이터의 resolution 이므로 맵데이터가 몇조각으로 쪼개져 있는지를 나타냅니다.
+
+```c
+for (unsigned int i = 0; i < input.objects.size(); i++) 
+{
+    odomed_data->objects[i].point.x += L_velodyne_x;
+    odomed_data->objects[i].point.y += L_velodyne_y;
+    odomed_data->objects[i].point.z += L_velodyne_z;
+
+    Eigen::RowVector4f odom_pose, point_xyz;
+
+    point_xyz(0) = odomed_data->objects[i].point.x;
+    point_xyz(1) = odomed_data->objects[i].point.y;
+    point_xyz(2) = odomed_data->objects[i].point.z;
+    point_xyz(3) = 1;
+
+    odom_pose.transpose() = RT02 * point_xyz.transpose();
+    odomed_data->objects[i].point.x = odom_pose(0);
+    odomed_data->objects[i].point.y = odom_pose(1);
+    odomed_data->objects[i].point.z = odom_pose(2);
+
+    if (drivable_map->data.size() != 0){
+
+        int xIndex, yIndex;
+        xIndex = (int) (
+                (odomed_data->objects[i].point.x -
+                 drivable_map->info.origin.position.x) *
+                resolutionInverse);
+        yIndex = (int) (
+                (odomed_data->objects[i].point.y -
+                 drivable_map->info.origin.position.y) *
+                resolutionInverse);
+
+        int mapIndex = MAP_IDX(drivable_map->info.width, xIndex, yIndex);
+
+        if(mapIndex < 0)
+        {
+            ROS_ERROR("Here is Out of map!!!!! Maybe CoreDump!!!!");
+            ROS_ERROR("So MapIndex is Negative!!! Restarting NOW!!!!!!!");
+        }
+
+        int mapdata = drivable_map->data[mapIndex];
+
+        if (mapdata == 0) { 
+            filtered_data->objects.push_back(input.objects[i]);
+
+
+        } else {
+
+        }
+    }
+
+    else if(drivable_map->data.size() == 0 && i == 0)
+    {        
+        ROS_ERROR("Map have no data LLL!!!!!!!!!!!!!!!");
+
+    }
+}
+```
+
+이 for문이 가장 핵심이 되는 부분입니다.
+
+```c
+odomed_data->objects[i].point.x += L_velodyne_x;
+odomed_data->objects[i].point.y += L_velodyne_y;
+odomed_data->objects[i].point.z += L_velodyne_z;
+
+Eigen::RowVector4f odom_pose, point_xyz;
+
+point_xyz(0) = odomed_data->objects[i].point.x;
+point_xyz(1) = odomed_data->objects[i].point.y;
+point_xyz(2) = odomed_data->objects[i].point.z;
+point_xyz(3) = 1;
+
+odom_pose.transpose() = RT02 * point_xyz.transpose();
+odomed_data->objects[i].point.x = odom_pose(0);
+odomed_data->objects[i].point.y = odom_pose(1);
+odomed_data->objects[i].point.z = odom_pose(2);
+```
+이 핵심 부분에서 처음에 Lidar 센서 기준의 좌표였던 데이터들을 아까 만든 회전변환 행렬을 이용하여 절대좌표 기준으로 Lidar 데이터를 바꿔줍니다.
+
+```c
+if (drivable_map->data.size() != 0){
+
+        int xIndex, yIndex;
+        xIndex = (int) (
+                (odomed_data->objects[i].point.x -
+                 drivable_map->info.origin.position.x) *
+                resolutionInverse);
+        yIndex = (int) (
+                (odomed_data->objects[i].point.y -
+                 drivable_map->info.origin.position.y) *
+                resolutionInverse);
+
+        int mapIndex = MAP_IDX(drivable_map->info.width, xIndex, yIndex);
+
+        if(mapIndex < 0)
+        {
+            ROS_ERROR("Here is Out of map!!!!! Maybe CoreDump!!!!");
+            ROS_ERROR("So MapIndex is Negative!!! Restarting NOW!!!!!!!");
+        }
+
+        int mapdata = drivable_map->data[mapIndex];
+
+        if (mapdata == 0) { 
+            filtered_data->objects.push_back(input.objects[i]);
+
+
+        } else {
+
+        }
+    }
+
+    else if(drivable_map->data.size() == 0 && i == 0)
+    {        
+        ROS_ERROR("Map have no data LLL!!!!!!!!!!!!!!!");
+
+    }
+}
+```
+그 다음 바로 if문이 나옵니다. 맵 데이터가 있을 때와 없을 때를 나눠 처리해줍니다.
+맵 데이터가 없을 때는 단순히 에러메시지만 출력하게 됩니다.
+맵 데이터가 있을 때는 이전의 resolutionInverse을 이용하여 mapidex를 위한 xindex, yindex 값을 계산해주었습니다.
+구한 값과 맵의 너비를 이용하여 mapindex를 또 계산해주었습니다. 이제 이 index값으로 실제 맵 데이터에 대조하여 도로인 영역만 찾아 filtered_data이라는 변수에 저장하여 퍼블리시 해주는 것으로 끝이 납니다.
 
 
 [목차](/README.md) | [Next](/docs/mdfile/clustering.md)
