@@ -444,5 +444,6 @@ if (drivable_map->data.size() != 0){
 맵 데이터가 있을 때는 이전의 resolutionInverse을 이용하여 mapidex를 위한 xindex, yindex 값을 계산해주었습니다.
 구한 값과 맵의 너비를 이용하여 mapindex를 또 계산해주었습니다. 이제 이 index값으로 실제 맵 데이터에 대조하여 도로인 영역만 찾아 filtered_data이라는 변수에 저장하여 퍼블리시 해주는 것으로 끝이 납니다.
 
+다음 페이지에서는 클러스터링에 대해 이야기해보겠습니다.
 
 [목차](/README.md) | [Next](/docs/mdfile/clustering.md)
