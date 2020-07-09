@@ -267,8 +267,26 @@ least_square_method 함수입니다.
 ## 2. Map Filter
 
 이번에는 
-[vlpt_filter_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_filter_L.cpp)라는 파일을 기준으로 RemoveGround이라는 콜백함수를 보겠습니다.
+[vlpt_filter_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_filter_L.cpp)라는 파일을 기준으로 보겠습니다.
 
+이 단계의 subscribe되는 topic은 맵 데이터와 GPS 데이터, Lidar 데이터입니다.
+
+우선 맵 데이터와 GPS 데이터에 관한 콜백함수인 tracking_odomCB, MapCB를 보겠습니다.
+```c
+void tracking_odomCB(const nav_msgs::OdometryPtr& msg) //subscribe odom
+{
+    Odom_ = *msg;
+}
+
+void MapCB(const nav_msgs::OccupancyGridPtr& map)
+{
+    isMapInit = true;
+    drivable_map = map;
+}
+```
+그냥 단순히 선언해둔 전역변수에 데이터들을 저장하였습니다.
+
+다음은 LeftMapFiter 콜백함수입니다.
 
 
 
