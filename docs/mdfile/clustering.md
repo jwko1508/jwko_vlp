@@ -401,9 +401,7 @@ std::vector<int> DataInfection(std::vector<int> input_i , pharos_vlp_tilt::perfe
 
 |i-16+1|i+1|i+16+1|
 |---|---|---|
-|**i-16**|<div class="text-purple">
-  i <a href="#" class="text-inherit"></a>
-</div>|**i+16**|
+|**i-16**|<div class="text-purple">i<a href="#" class="text-inherit"></a></div>|**i+16**|
 |**i-16-1**|**i-1**|**i+16-1**|
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
