@@ -465,8 +465,6 @@ void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCl
     pcl::PointXYZI pt;
     pcl::PointXYZI infopt;
 
-     /// @won array에서는 해당 값의 i의 값을 넣는다.
-
     int info_min = 10000;
     int info_max = -1;
 
@@ -484,8 +482,7 @@ void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCl
 
         object_cloud->push_back(pt);
 
-        /// @won  Left_end_point
-        if(i == 0)/// index 즉 laser ling 넘버에 들어있는게 하나도 없을때.
+        if(i == 0)
         {
             object_pose_info.min_object.x = one.objects[i].point.x;
             object_pose_info.min_object.y = one.objects[i].point.y;
@@ -496,7 +493,7 @@ void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCl
 
         }
 
-        else /// 뭔가 들어 있을때 이제 비교가 시작되어야 한다.
+        else
         {
 
             object_pose_info.min_object.x = (object_pose_info.min_object.x >= one.objects[i].point.x) ? one.objects[i].point.x : object_pose_info.min_object.x;
@@ -517,7 +514,6 @@ void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCl
 
     }
 
-    /// Center Position
     object_pose_info.center_x = center_x/one.objects.size();
     object_pose_info.center_y = center_y/one.objects.size();
     object_pose_info.center_z = center_z/one.objects.size();
@@ -530,7 +526,54 @@ void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCl
 }
 ```
 이 함수는 비교적 간단하여 for문 안쪽을 살펴보겠습니다.
+그 전에 변수에 대해 헷갈릴 수 있어 간단히 설명하겠습니다. 일단 one은 이전 콜백함수에서 subscribe된 input 데이터이고, 나머지 pointvector, combinevector, infooo는 아까 가공할 데이터를 저장할 변수입니다. 다음 바로 for문입니다.
 
+```c
+center_x += one.objects[i].point.x ,pt.x = one.objects[i].point.x;
+center_y += one.objects[i].point.y ,pt.y = one.objects[i].point.y;
+center_z += one.objects[i].point.z ,pt.z = one.objects[i].point.z;
+///!!!!
+infopt.x = one.objects[i].info.hori;
+infopt.y = one.objects[i].info.laser;
+laser_and_hori->push_back(infopt);
+```
+처음 부분은 중심점을 구하기 위해 center_x,y,z라는 변수에 한 객체의 point x,y,z 좌표를 전부 더하여 저장합니다.
+그리고 x,y,z 좌표도 따로 저장하고, set 코드부터 계속 설명하였던 hori, laser(ring)정보를 따로 저장합니다.
 
+```c
+if(i == 0)
+{
+    object_pose_info.min_object.x = one.objects[i].point.x;
+    object_pose_info.min_object.y = one.objects[i].point.y;
+    object_pose_info.min_object.z = one.objects[i].point.z;
+    object_pose_info.max_object.x = one.objects[i].point.x;
+    object_pose_info.max_object.y = one.objects[i].point.y;
+    object_pose_info.max_object.z = one.objects[i].point.z;
+
+}
+
+else
+{
+
+    object_pose_info.min_object.x = (object_pose_info.min_object.x >= one.objects[i].point.x) ? one.objects[i].point.x : object_pose_info.min_object.x;
+    object_pose_info.min_object.y = (object_pose_info.min_object.y >= one.objects[i].point.y) ? one.objects[i].point.y : object_pose_info.min_object.y;
+    object_pose_info.min_object.z = (object_pose_info.min_object.z >= one.objects[i].point.z) ? one.objects[i].point.z : object_pose_info.min_object.z;
+    object_pose_info.max_object.x = (object_pose_info.max_object.x <= one.objects[i].point.x) ? one.objects[i].point.x : object_pose_info.max_object.x;
+    object_pose_info.max_object.y = (object_pose_info.max_object.y <= one.objects[i].point.y) ? one.objects[i].point.y : object_pose_info.max_object.y;
+    object_pose_info.max_object.z = (object_pose_info.max_object.z <= one.objects[i].point.z) ? one.objects[i].point.z : object_pose_info.max_object.z;
+    info_min = (info_min >= one.objects[i].info.hori) ? one.objects[i].info.hori : info_min;
+    info_max = (info_max <= one.objects[i].info.hori) ? one.objects[i].info.hori : info_max;
+    object_pose_info.min_hori = info_min;
+    object_pose_info.max_hori = info_max;
+    object_pose_info.min_center = (info_min == one.objects[i].info.hori) ? PointtoCenter(one.objects[i].point) : object_pose_info.min_center;
+    object_pose_info.max_center = (info_max == one.objects[i].info.hori) ? PointtoCenter(one.objects[i].point) : object_pose_info.max_center;
+}
+```
+다음 if문은 한 객체에서 가장 큰 max_x,y,z , max_hori값과 가장 작은 min_x,y,z , min_hori값들을 비교하여 저장합니다..
+이 과정을 하나의 객체의 point수 만큼 반복하여 아까 max와 min값을 결정하고 center_x,y,z 저장된 값을 객체의 point 수만큼 나눠 중심점을 찾아 저장해줍니다.
+
+이전의 계층적 군집화로는 객체를 하나라고 인식하는 것이 불완전하였기 때문에 위 방법처럼 K-평균 군집화 알고리즘을 사용할 데이터들을 정리하였었습니다. 하지만 저는 다른 방법으로 사용해보았습니다.
+우선 z축 방향으로 point를 2차원적으로 보았습니다. 
+ 
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
