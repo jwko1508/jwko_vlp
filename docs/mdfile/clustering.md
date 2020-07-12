@@ -431,6 +431,106 @@ std::vector<int> DataInfection(std::vector<int> input_i , pharos_vlp_tilt::perfe
 
 ## 2. Each
 
-[vlpt_each_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_each_L.cpp)라는 파일을 기준으로 LeftSegmentation이라는 콜백함수를 보겠습니다.
+[vlpt_each_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_each_L.cpp)라는 파일을 기준으로 EachCombineObject이라는 콜백함수를 보겠습니다.
+
+```c
+std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > vec_listed_pointcloud;
+vec_listed_pointcloud.reserve(20000);
+std::vector<CombineType> vec_listed_combine;
+vec_listed_combine.reserve(10000);
+std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr > vec_infos;
+vec_infos.reserve(10000);
+```
+
+처음은 역시 가공할 데이터를 저장할 변수 선언입니다. 이번에는 subscribe된 데이터를 통째로 저장하지 않고 나눠서 저장을 할 예정입니다.
+
+```c
+for(unsigned int i=0; i < input->one.size(); i++)
+{
+    ListSeqeunce( input->one[i] ,vec_listed_pointcloud, vec_listed_combine,vec_infos );
+
+}
+```
+위에서 설명했듯이 데이터를 나눠서 저장하기 위한 함수입니다. 함수를 자세히 보겠습니다.
+
+```c
+void ListSeqeunce(pharos_vlp_tilt::perfectarray& one  , std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr >& pointvector
+            , std::vector<CombineType>& combinevector ,std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr >& infooo    )
+{
+    pcl::PointCloud<pcl::PointXYZI>::Ptr object_cloud (new pcl::PointCloud<pcl::PointXYZI>);
+    CombineType object_pose_info;
+    pcl::PointCloud<pcl::PointXYZI>::Ptr laser_and_hori (new pcl::PointCloud<pcl::PointXYZI>);
+
+    double center_x(0) ,center_y(0), center_z(0);
+    pcl::PointXYZI pt;
+    pcl::PointXYZI infopt;
+
+     /// @won array에서는 해당 값의 i의 값을 넣는다.
+
+    int info_min = 10000;
+    int info_max = -1;
+
+
+    for(unsigned int i=0; i < one.objects.size(); i++)
+    {
+        center_x += one.objects[i].point.x ,pt.x = one.objects[i].point.x;
+        center_y += one.objects[i].point.y ,pt.y = one.objects[i].point.y;
+        center_z += one.objects[i].point.z ,pt.z = one.objects[i].point.z;
+        ///!!!!
+        infopt.x = one.objects[i].info.hori;
+        infopt.y = one.objects[i].info.laser;
+        laser_and_hori->push_back(infopt);
+
+
+        object_cloud->push_back(pt);
+
+        /// @won  Left_end_point
+        if(i == 0)/// index 즉 laser ling 넘버에 들어있는게 하나도 없을때.
+        {
+            object_pose_info.min_object.x = one.objects[i].point.x;
+            object_pose_info.min_object.y = one.objects[i].point.y;
+            object_pose_info.min_object.z = one.objects[i].point.z;
+            object_pose_info.max_object.x = one.objects[i].point.x;
+            object_pose_info.max_object.y = one.objects[i].point.y;
+            object_pose_info.max_object.z = one.objects[i].point.z;
+
+        }
+
+        else /// 뭔가 들어 있을때 이제 비교가 시작되어야 한다.
+        {
+
+            object_pose_info.min_object.x = (object_pose_info.min_object.x >= one.objects[i].point.x) ? one.objects[i].point.x : object_pose_info.min_object.x;
+            object_pose_info.min_object.y = (object_pose_info.min_object.y >= one.objects[i].point.y) ? one.objects[i].point.y : object_pose_info.min_object.y;
+            object_pose_info.min_object.z = (object_pose_info.min_object.z >= one.objects[i].point.z) ? one.objects[i].point.z : object_pose_info.min_object.z;
+            object_pose_info.max_object.x = (object_pose_info.max_object.x <= one.objects[i].point.x) ? one.objects[i].point.x : object_pose_info.max_object.x;
+            object_pose_info.max_object.y = (object_pose_info.max_object.y <= one.objects[i].point.y) ? one.objects[i].point.y : object_pose_info.max_object.y;
+            object_pose_info.max_object.z = (object_pose_info.max_object.z <= one.objects[i].point.z) ? one.objects[i].point.z : object_pose_info.max_object.z;
+            info_min = (info_min >= one.objects[i].info.hori) ? one.objects[i].info.hori : info_min;
+            info_max = (info_max <= one.objects[i].info.hori) ? one.objects[i].info.hori : info_max;
+            object_pose_info.min_hori = info_min;
+            object_pose_info.max_hori = info_max;
+            object_pose_info.min_center = (info_min == one.objects[i].info.hori) ? PointtoCenter(one.objects[i].point) : object_pose_info.min_center;
+            object_pose_info.max_center = (info_max == one.objects[i].info.hori) ? PointtoCenter(one.objects[i].point) : object_pose_info.max_center;
+        }
+
+
+
+    }
+
+    /// Center Position
+    object_pose_info.center_x = center_x/one.objects.size();
+    object_pose_info.center_y = center_y/one.objects.size();
+    object_pose_info.center_z = center_z/one.objects.size();
+
+
+    pointvector.push_back(object_cloud);
+    combinevector.push_back(object_pose_info);
+    infooo.push_back(laser_and_hori);
+
+}
+```
+이 함수는 비교적 간단하여 for문 안쪽을 살펴보겠습니다.
+
+
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
