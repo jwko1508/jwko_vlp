@@ -56,6 +56,6 @@ for(int i=0; i < left_input->objects.size(); i++)
 
 이 과정은 remove_ground 과정에 있는 point배열을 해주는 for문에서 지면제거 함수만 제거된 과정입니다. 그래서 따로 설명드리지 않겠습니다.
 이 과정으로 point배열에서 센서가 인식하지 않은 빈공간의 데이터와 인식한 데이터가 확실하게 나눠지게 됩니다.
-
+ 
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
