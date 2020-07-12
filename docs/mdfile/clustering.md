@@ -83,10 +83,10 @@ Vlp16Segmentation 이 함수가 계층적 군집화를 하는 함수입니다. �
             one_object->objects.push_back(input->objects[i]);
 
             init_one_i.push_back(i); 
-            multiple_i = DataInfection(init_one_i , input, one_object/*, info_hori_min, info_hori_max*/);
+            multiple_i = DataInfection(init_one_i , input, one_object);
             while(multiple_i.size() != 0)
             {
-                multiple_i = DataInfection(multiple_i,input, one_object/*, info_hori_min, info_hori_max*/);
+                multiple_i = DataInfection(multiple_i,input, one_object);
             }
 
             if(one_object->objects.size() <= MIN_OBJECT_NUM)
@@ -423,5 +423,14 @@ std::vector<int> DataInfection(std::vector<int> input_i , pharos_vlp_tilt::perfe
 |**2**|8|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|~|4|
 |**1**|8|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|~|4|
 |**0**|7|6|6|6|6|6|6|6|6|6|6|6|6|6|6|6|6|6|~|5|
+
+위 그림은 if문 조건에 대한 설명을 하기위해 시각화 자료를 만들었습니다. 여기서 3, 4, 5 번은 이 배열의 가잘 끝열을 의미합니다.
+이렇게 1 ~ 8 번처럼 가장자리에 존재하는 point는 주변 점을 온전히 찾을 수 없습니다. 그렇기 때문에 Lidar가 원형으로 스캔한다는 점을 이용하여 처음 열을 마지막 열과 비교하는 작업을 if문으로 하였습니다. 또한 가장 위의 point행과 아래의 point행은 연결되어 있지 않기 때문에 상황에 맞는 조건을 작성하였습니다.
+
+이제 하나의 객체라고 인식된 것들을 군집화하였으니 each의 코드로 넘어가겠습니다.
+
+## 2. Each
+
+[vlpt_each_L.cpp](/src/vlp/pharos_vlp_tilt/src/vlpt_each_L.cpp)라는 파일을 기준으로 LeftSegmentation이라는 콜백함수를 보겠습니다.
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
