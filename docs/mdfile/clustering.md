@@ -130,7 +130,7 @@ Vlp16Segmentation 이 함수가 계층적 군집화를 하는 함수입니다. �
 
 왼쪽 숫자는 Lidar의 채널이고 그 이외에는 같은 숫자끼리 하나의 객체라는 것을 표시합니다.
 
-DataInfection라는 함수가 중간에 존재합니다. 이 함수는 계층적 알고리즘의 조건을 설정하는 함수입니다.
+다음 DataInfection라는 함수가 중간에 존재합니다. 이 함수는 계층적 알고리즘의 조건을 설정하는 함수입니다.
 
 ```c
 std::vector<int> DataInfection(std::vector<int> input_i , pharos_vlp_tilt::perfectarrayPtr &input_my_msg , pharos_vlp_tilt::perfectarrayPtr &object_output)
@@ -396,6 +396,12 @@ std::vector<int> DataInfection(std::vector<int> input_i , pharos_vlp_tilt::perfe
 }
 ```
 여기의 함수 if문은 각각 계층적 알고리즘을 상황별로 조건을 주어 작성하였습니다.
+엄청나게 복잡하게 보이지만 사실 하나하나 알고보면 엄청 간단한 방식입니다.
+이렇게 if문 조건이 나눠진 이유에 대해 설명하기 이전에 원리에 대해 시각화 자료로 보겠습니다.
 
+|i-16+1|i+1|i+16+1|
+|---|---|---|
+|**i-16**|**i**|**i+16**|
+|**i-16-1**|**i-1**|**i+16-1**|
 
 [목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
