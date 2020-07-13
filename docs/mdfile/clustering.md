@@ -595,4 +595,4 @@ else
 그러므로 이 코드는 따로 설명하지않고 넘어가겠습니다.
 
 
-[목차](/README.md) | [Next](/docs/mdfile/data_combine.md)
+[목차](/README.md) | [Next](/docs/mdfile/final_process.md)
